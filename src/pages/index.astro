@@ -6,6 +6,8 @@ import Header from '../components/Header.astro';
 import PillNav from '../components/PillNav.astro';
 import MobileMenu from '../components/MobileMenu.astro';
 import BackToTop from '../components/BackToTop.astro';
+import Hero from '../components/sections/Hero.astro';
+import About from '../components/sections/About.astro';
 ---
 
 <BaseLayout>
@@ -14,6 +16,9 @@ import BackToTop from '../components/BackToTop.astro';
   <Header />
   <PillNav />
   <MobileMenu />
-  <main></main>
+  <main>
+    <Hero />
+    <About />
+  </main>
   <BackToTop />
 </BaseLayout>
