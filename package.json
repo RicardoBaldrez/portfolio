@@ -1,0 +1,13 @@
+{
+  "name": "portfolio",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Portfólio de Ricardo Baldrez, desenvolvedor front-end e mobile.",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check"
+  }
+}
