@@ -1,7 +1,19 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Boot from '../components/Boot.astro';
+import Decor from '../components/Decor.astro';
+import Header from '../components/Header.astro';
+import PillNav from '../components/PillNav.astro';
+import MobileMenu from '../components/MobileMenu.astro';
+import BackToTop from '../components/BackToTop.astro';
 ---
 
 <BaseLayout>
+  <Boot />
+  <Decor />
+  <Header />
+  <PillNav />
+  <MobileMenu />
   <main></main>
+  <BackToTop />
 </BaseLayout>
