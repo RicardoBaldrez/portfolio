@@ -104,7 +104,7 @@ export const EN: Record<string, string> = {
   'não deu pra copiar: selecione o email acima': "couldn't copy: select the email above",
   'Trajetória completa, recomendações e o melhor jeito de falar de oportunidades.': 'Full career history, recommendations and the best way to talk about opportunities.',
   'Código dos projetos pessoais.': 'Code for my side projects.', 'Pra propostas, projetos ou só pra trocar uma ideia.': 'For proposals, projects or just a chat.',
-  'Astro, HTML, CSS e JS · atualizado em nov 2026': 'Astro, HTML, CSS & JS · updated Nov 2026',
+  'Astro, TypeScript, HTML e CSS · atualizado em nov 2026': 'Astro, TypeScript, HTML & CSS · updated Nov 2026',
   // dock e segredos
   'Segredos do site': 'Site secrets', 'SEGREDOS DO SITE': 'SITE SECRETS', 'Raio-X': 'X-ray',
   'Segure o clique (ou o dedo) em qualquer lugar.': 'Press and hold anywhere (mouse or finger).',
@@ -133,7 +133,7 @@ export const EN: Record<string, string> = {
   'desenvolvedor front-end e mobile · React, React Native e TypeScript.': 'front-end and mobile developer · React, React Native and TypeScript.',
   'hoje: app da Crefisa pela GFT Technologies · São Paulo, SP': "now: Crefisa's app at GFT Technologies · São Paulo, Brazil",
   'estudando: pós em Engenharia de IA Aplicada (UNIPDS) · LLMs, RAG, MCP e agentes de IA': 'studying: postgraduate degree in Applied AI Engineering (UNIPDS) · LLMs, RAG, MCP and AI agents',
-  'você achou o segredo.': 'you found the secret.', 'o segredo é que todo esse site é HTML, CSS e um pouco de JS bem escrito.': 'the secret is that this whole site is HTML, CSS and a bit of well-written JS.',
+  'você achou o segredo.': 'you found the secret.', 'o segredo é que todo esse site é Astro, CSS e um pouco de TypeScript bem escrito.': 'the secret is that this whole site is Astro, CSS and a bit of well-written TypeScript.',
   'cat: projects/: é um diretório. tente: projects': 'cat: projects/: is a directory. try: projects',
   'front-end: React · TypeScript · JavaScript · Vue · HTML semântico · CSS': 'front-end: React · TypeScript · JavaScript · Vue · semantic HTML · CSS',
   'arquitetura: Micro Frontends · Atomic Design · Design System': 'architecture: Micro Frontends · Atomic Design · Design System',

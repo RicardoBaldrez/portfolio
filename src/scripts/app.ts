@@ -901,7 +901,7 @@ import { projects, type Project } from '../data/projects';
         if (f === 'about.txt') return go('sobre');
         if (f === 'experience.log') return go('experiencia');
         if (f === 'contact.md') return go('contato');
-        if (f === 'secret.txt') return say([['você achou o segredo.', 'ok'], ['o segredo é que todo esse site é HTML, CSS e um pouco de JS bem escrito.', 'muted']]);
+        if (f === 'secret.txt') return say([['você achou o segredo.', 'ok'], ['o segredo é que todo esse site é Astro, CSS e um pouco de TypeScript bem escrito.', 'muted']]);
         if (f.indexOf('projects') === 0) return say([['cat: projects/: é um diretório. tente: projects', 'err']]);
         return say([['cat: ' + (f || '?') + ': arquivo não encontrado', 'err']]);
       },
