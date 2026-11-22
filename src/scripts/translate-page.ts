@@ -2,9 +2,9 @@
   /* traduz o texto da página quando o idioma é inglês */
   const T = window.RB_T; if (window.RB_LANG !== 'en' || !T) return;
   const skip = new Set(['SCRIPT', 'STYLE', 'svg', 'SVG', 'CODE', 'KBD']);
-  const walk = (node) => {
-    if (node.nodeType === 3) { const t = node.nodeValue; if (t.trim()) { const n = T(t); if (n !== t) node.nodeValue = n; } return; }
-    if (node.nodeType !== 1 || skip.has(node.nodeName) || node.classList.contains('term-out') || node.classList.contains('letters') || node.id === 'phrase') return;
+  const walk = (node: Node): void => {
+    if (node.nodeType === Node.TEXT_NODE) { const t = node.nodeValue || ''; if (t.trim()) { const n = T(t); if (n !== t) node.nodeValue = n; } return; }
+    if (!(node instanceof Element) || skip.has(node.nodeName) || node.classList.contains('term-out') || node.classList.contains('letters') || node.id === 'phrase') return;
     for (const a of ['aria-label', 'alt', 'title', 'data-file']) { const v = node.getAttribute(a); if (v) { const n = T(v); if (n !== v) node.setAttribute(a, n); } }
     node.childNodes.forEach(walk);
   };

@@ -9,6 +9,8 @@ export interface Job {
   edu?: boolean;
   badge?: string;
   logos?: string[];
+  /** entregas, mostradas num bloco expansível */
+  did?: string[];
   desc: string;
   tags: string[];
 }

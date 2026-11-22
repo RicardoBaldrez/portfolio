@@ -40,14 +40,13 @@ src/
 ├── i18n/                # traduções para inglês
 ├── layouts/             # layout base com os scripts que rodam antes da página aparecer
 ├── pages/               # index.astro
-├── scripts/             # interações (scroll, túnel, terminal, temas, idioma)
+├── scripts/             # interações em TypeScript (scroll, túnel, terminal, temas, idioma)
 └── styles/              # CSS global
 public/                  # imagens e favicon
 ```
 
 ## Próximos passos
 
-- Converter os scripts de interação para módulos TypeScript tipados.
 - Renderizar a timeline e os projetos no servidor (HTML pronto para SEO).
 - Versão em inglês com endereço próprio (`/en`).
 - Imagem de prévia para compartilhamento e deploy na Vercel.

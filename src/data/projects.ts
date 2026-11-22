@@ -5,7 +5,8 @@ export interface Project {
   summary: string;
   tags: string[];
   color: string;
-  cover: string;
+  /** ilustração da capa do card */
+  cover: 'phone' | 'chart' | 'flow' | 'mail';
   file: string;
   challenge: string;
   did: string[];

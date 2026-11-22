@@ -1,36 +1,36 @@
 import { EN, EN_RULES } from '../i18n/en';
 import { LOGOS } from '../data/logos';
 import { jobs } from '../data/jobs';
-import { projects } from '../data/projects';
+import { projects, type Project } from '../data/projects';
 
-/* Interações do portfólio: scroll, túnel, terminal, temas, idioma etc.
-   Fase 1 da migração: o mesmo código do protótipo, agora como módulo. */
+/* Interações do portfólio: scroll, túnel, terminal, temas, idioma etc. */
 (function(){
   const root = document.documentElement;
   const body = document.body;
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const clamp = (v) => Math.max(0, Math.min(1, v));
-  const set = (k, v) => root.style.setProperty(k, (+v).toFixed(4));
+  const clamp = (v: number) => Math.max(0, Math.min(1, v));
+  const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
+  const set = (k: string, v: number | string) => root.style.setProperty(k, (+v).toFixed(4));
   /* ---------- idioma (translate / PT | EN) ---------- */
   const LANG = window.RB_LANG || 'pt';
-  const T = (s) => {
+  const T = (s: string): string => {
     if (LANG !== 'en' || typeof s !== 'string') return s;
     const k = s.trim();
     if (Object.prototype.hasOwnProperty.call(EN, k)) return s.replace(k, () => EN[k]);
     let o = s; for (const [a, b] of EN_RULES) o = o.split(a).join(b); return o;
   };
   window.RB_T = T;
-  const setLang = (l) => { try { localStorage.setItem('rb-lang', l); sessionStorage.setItem('rb-scroll', String(window.scrollY)); } catch (e) {} location.reload(); };
+  const setLang = (l: 'pt' | 'en') => { try { localStorage.setItem('rb-lang', l); sessionStorage.setItem('rb-scroll', String(window.scrollY)); } catch (e) {} location.reload(); };
   window.RB_setLang = setLang;
-  const setMode = (m) => {
+  const setMode = (m: 'light' | 'dark') => {
     root.classList.toggle('light', m === 'light');
     try { localStorage.setItem('rb-mode', m); } catch (e) {}
-    document.querySelectorAll('[data-mode]').forEach((b) => b.setAttribute('aria-label', T(m === 'light' ? 'Mudar para o tema escuro' : 'Mudar para o tema claro')));
+    document.querySelectorAll<HTMLElement>('[data-mode]').forEach((b) => b.setAttribute('aria-label', T(m === 'light' ? 'Mudar para o tema escuro' : 'Mudar para o tema claro')));
   };
   window.RB_setMode = setMode;
-  document.querySelectorAll('[data-mode]').forEach((b) => b.addEventListener('click', () => setMode(root.classList.contains('light') ? 'dark' : 'light')));
+  document.querySelectorAll<HTMLElement>('[data-mode]').forEach((b) => b.addEventListener('click', () => setMode(root.classList.contains('light') ? 'dark' : 'light')));
   setMode(root.classList.contains('light') ? 'light' : 'dark');
-  document.querySelectorAll('[data-lang]').forEach((b) => {
+  document.querySelectorAll<HTMLElement>('[data-lang]').forEach((b) => {
     b.textContent = LANG === 'en' ? 'PT' : 'EN';
     b.setAttribute('aria-label', LANG === 'en' ? 'Ver em português' : 'View in English');
     b.addEventListener('click', () => setLang(LANG === 'en' ? 'pt' : 'en'));
@@ -42,16 +42,16 @@ import { projects } from '../data/projects';
     ['movimento', 'var(--mag)'], ['guia, a', 'var(--text)'], ['performance', 'var(--lime)'],
     ['sustenta e o código fica fácil de evoluir.', 'var(--text)']
   ];
-  const words = [];
+  const words: [string, string][] = [];
   phrase.forEach(([t, c]) => T(t).split(' ').forEach((w) => words.push([w, c])));
   const K = words.length + 2;
-  const ph = document.getElementById('phrase');
+  const ph = $('phrase');
   ph.innerHTML = words.map(([w, c], i) =>
     '<span style="color:' + c + ';opacity:clamp(.12, calc(var(--s) * ' + K + ' - ' + i + '), 1);transform:translateY(calc(clamp(0, ' + (i + 1) + ' - var(--s) * ' + K + ', 1) * 32px))">' + w + '</span>'
   ).join(' ');
 
   const nWork = jobs.filter((j) => !j.edu).length;
-  document.getElementById('jobs').innerHTML = '<span class="tl-fill" aria-hidden="true"></span><span class="tl-head" aria-hidden="true"></span>' + jobs.map((j, i) =>
+  $('jobs').innerHTML = '<span class="tl-fill" aria-hidden="true"></span><span class="tl-head" aria-hidden="true"></span>' + jobs.map((j, i) =>
     '<li class="tl-item" style="--c:' + j.c + '">' +
       '<span class="tl-dot" aria-hidden="true"></span>' +
       '<div class="tl-date"><span>' + j.when + '</span>' + (j.now || j.badge ? '<span class="tl-now"><i aria-hidden="true"></i>' + (j.badge || 'atual') + '</span>' : '') + '</div>' +
@@ -63,11 +63,11 @@ import { projects } from '../data/projects';
       '</div></li>'
   ).join('');
   (function(){
-    const firstEdu = document.querySelectorAll('#jobs .tl-item')[jobs.findIndex((j) => j.edu)];
+    const firstEdu = document.querySelectorAll<HTMLElement>('#jobs .tl-item')[jobs.findIndex((j) => j.edu)];
     if (firstEdu) firstEdu.insertAdjacentHTML('beforebegin', '<li class="tl-sep"><span class="tl-sep-mark" aria-hidden="true"></span><p class="tl-sep-k">// formação</p><h3 class="tl-sep-t">Formação acadêmica</h3></li>');
   })();
   (function(){
-    const list = document.getElementById('jobs'), items = [...list.querySelectorAll('.tl-item')];
+    const list = $('jobs'), items = [...list.querySelectorAll<HTMLElement>('.tl-item')];
     let raf = 0;
     const upd = () => {
       raf = 0;
@@ -84,18 +84,18 @@ import { projects } from '../data/projects';
   })();
 
   const D = '#0A0B14';
-  const covers = {
+  const covers: Record<Project['cover'], string> = {
     phone: '<svg class="cover" viewBox="0 0 400 260" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g fill="none" stroke="' + D + '" stroke-width="3" stroke-linecap="round"><rect x="150" y="26" width="100" height="208" rx="18" fill="rgba(10,11,20,.12)"/><path d="M185 38h30"/><rect x="164" y="56" width="72" height="34" rx="8" fill="rgba(10,11,20,.2)"/><path d="M164 106h56M164 120h40"/><rect x="164" y="136" width="32" height="32" rx="8"/><rect x="204" y="136" width="32" height="32" rx="8"/><rect x="164" y="176" width="32" height="32" rx="8"/><rect x="204" y="176" width="32" height="32" rx="8" fill="rgba(10,11,20,.2)"/></g><g fill="none" stroke="' + D + '" stroke-width="2" opacity=".45"><rect x="62" y="70" width="58" height="22" rx="11"/><rect x="62" y="104" width="58" height="22" rx="4"/><circle cx="91" cy="160" r="16"/><rect x="282" y="74" width="54" height="54" rx="10"/><path d="M282 146h54M282 160h36"/></g></svg>',
     chart: '<svg class="cover" viewBox="0 0 400 260" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g fill="none" stroke="' + D + '" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="56" y="34" width="288" height="192" rx="12" fill="rgba(10,11,20,.12)"/><path d="M56 60h288"/><circle cx="74" cy="47" r="3"/><circle cx="86" cy="47" r="3"/><circle cx="98" cy="47" r="3"/><path d="M76 84h70M76 98h44"/><path d="M80 196 L130 168 L170 178 L214 132 L254 146 L320 96" stroke-width="4"/><path d="M80 196 L130 168 L170 178 L214 132 L254 146 L320 96 L320 206 L80 206Z" fill="rgba(10,11,20,.14)" stroke="none"/><path d="M76 206h248" opacity=".5"/><circle cx="320" cy="96" r="6" fill="' + D + '"/></g></svg>',
     flow: '<svg class="cover" viewBox="0 0 400 260" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g fill="none" stroke="' + D + '" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="70" cy="130" r="24" fill="rgba(10,11,20,.2)"/><circle cx="160" cy="80" r="20"/><circle cx="160" cy="180" r="20"/><circle cx="250" cy="130" r="22" fill="rgba(10,11,20,.12)"/><circle cx="336" cy="130" r="24" fill="rgba(10,11,20,.2)"/><path d="M92 120 L140 88M92 140 L140 172M180 86 L230 120M180 174 L230 140M272 130 H310"/><path d="M302 122 L312 130 L302 138"/><path d="M60 130h20M70 120v20" stroke-width="3.5"/><path d="M326 130 l7 7 l13 -14" stroke-width="3.5"/></g></svg>',
     mail: '<svg class="cover" viewBox="0 0 400 260" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g fill="none" stroke="' + D + '" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="108" y="56" width="184" height="124" rx="10" fill="rgba(10,11,20,.14)"/><path d="M108 66 L200 132 L292 66"/><g opacity=".5"><rect x="70" y="96" width="120" height="80" rx="8" transform="rotate(-10 130 136)"/><rect x="214" y="104" width="120" height="80" rx="8" transform="rotate(9 274 144)"/></g><path d="M140 206h120M160 222h80" opacity=".6"/></g></svg>'
   };
   const projColors = projects.map((p) => p.color);
-  const defs = document.getElementById('filters');
+  const defs = $('filters');
   defs.innerHTML = projColors.map((_, i) =>
     '<filter id="warp' + i + '" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.012 0.02" numOctaves="2" seed="' + (i + 3) + '" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="0" xChannelSelector="R" yChannelSelector="G"/></filter>'
   ).join('');
-  document.getElementById('track').innerHTML = projects.map((p, i) => {
+  $('track').innerHTML = projects.map((p, i) => {
     const n = '0' + (i + 1);
     return '<article class="card" data-i="' + i + '" style="--c:' + p.color + '"><div class="card-in">' +
       '<div class="face front">' +
@@ -116,12 +116,12 @@ import { projects } from '../data/projects';
       '</div>' +
     '</div></article>';
   }).join('');
-  document.querySelectorAll('.card').forEach((card) => {
-    const front = card.querySelector('.front'), back = card.querySelector('.back');
-    card.querySelectorAll('.flip').forEach((btn) => btn.addEventListener('click', () => {
+  document.querySelectorAll<HTMLElement>('.card').forEach((card) => {
+    const front = card.querySelector<HTMLElement>('.front')!, back = card.querySelector<HTMLElement>('.back')!;
+    card.querySelectorAll<HTMLElement>('.flip').forEach((btn) => btn.addEventListener('click', () => {
       const on = card.classList.toggle('flipped');
       front.inert = on; back.inert = !on;
-      setTimeout(() => (on ? back : front).querySelector('.flip').focus({ preventScroll: true }), reduce ? 0 : 400);
+      setTimeout(() => (on ? back : front).querySelector<HTMLElement>('.flip')!.focus({ preventScroll: true }), reduce ? 0 : 400);
     }));
   });
 
@@ -137,55 +137,55 @@ import { projects } from '../data/projects';
       first = false;
       for (const ch of w) html += '<span class="ch" style="color:' + c + '">' + ch + '</span>';
     });
-    document.querySelector('#arena .letters').innerHTML = html;
+    document.querySelector<HTMLElement>('#arena .letters')!.innerHTML = html;
   })();
 
   /* ---------- distorção dos cards ---------- */
-  document.querySelectorAll('.card').forEach((card) => {
-    const disp = defs.querySelector('#warp' + card.dataset.i + ' feDisplacementMap');
+  document.querySelectorAll<HTMLElement>('.card').forEach((card) => {
+    const disp = defs.querySelector<HTMLElement>('#warp' + card.dataset.i + ' feDisplacementMap')!;
     let cur = 0, target = 0, raf = 0;
     const tick = () => {
       cur += (target - cur) * 0.12;
       disp.setAttribute('scale', cur.toFixed(2));
-      if (Math.abs(target - cur) > 0.1) raf = requestAnimationFrame(tick); else { disp.setAttribute('scale', target); raf = 0; }
+      if (Math.abs(target - cur) > 0.1) raf = requestAnimationFrame(tick); else { disp.setAttribute('scale', String(target)); raf = 0; }
     };
-    const go = (v) => { if (reduce) return; target = v; if (!raf) raf = requestAnimationFrame(tick); };
+    const go = (v: number) => { if (reduce) return; target = v; if (!raf) raf = requestAnimationFrame(tick); };
     card.addEventListener('mouseenter', () => go(46));
     card.addEventListener('mouseleave', () => go(0));
   });
 
   /* ---------- nav, menu, blueprint, topo ---------- */
   const toTop = () => window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
-  document.querySelectorAll('[data-top]').forEach((b) => b.addEventListener('click', toTop));
-  const bpBtns = document.querySelectorAll('[data-bp]');
+  document.querySelectorAll<HTMLElement>('[data-top]').forEach((b) => b.addEventListener('click', toTop));
+  const bpBtns = document.querySelectorAll<HTMLElement>('[data-bp]');
   const toggleBp = () => {
     const on = body.classList.toggle('bp');
     bpBtns.forEach((b) => {
-      b.setAttribute('aria-pressed', on);
-      const sp = b.querySelector('span'); if (sp) sp.textContent = on ? 'sair do blueprint' : 'ver como foi construído';
+      b.setAttribute('aria-pressed', String(on));
+      const sp = b.querySelector<HTMLElement>('span')!; if (sp) sp.textContent = on ? 'sair do blueprint' : 'ver como foi construído';
     });
     if (body.classList.contains('menu-open')) body.classList.remove('menu-open');
     return on;
   };
   bpBtns.forEach((b) => b.addEventListener('click', toggleBp));
   /* segredos */
-  const secrets = document.getElementById('secrets'), secBtn = document.querySelector('.secrets-btn');
-  const setSecrets = (open) => { secrets.classList.toggle('open', open); secBtn.setAttribute('aria-expanded', open); };
+  const secrets = $('secrets'), secBtn = document.querySelector<HTMLElement>('.secrets-btn')!;
+  const setSecrets = (open: boolean) => { secrets.classList.toggle('open', open); secBtn.setAttribute('aria-expanded', String(open)); };
   secBtn.addEventListener('click', (e) => { e.stopPropagation(); setSecrets(!secrets.classList.contains('open')); });
-  document.addEventListener('click', (e) => { if (secrets.classList.contains('open') && !e.target.closest('.secrets')) setSecrets(false); });
+  document.addEventListener('click', (e) => { if (secrets.classList.contains('open') && !(e.target as Element).closest('.secrets')) setSecrets(false); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && secrets.classList.contains('open')) { setSecrets(false); secBtn.focus(); } });
-  const menu = document.querySelector('.menu');
-  let menuOpener = null;
+  const menu = document.querySelector<HTMLElement>('.menu')!;
+  let menuOpener: HTMLElement | null = null;
   const closeMenu = () => { body.classList.remove('menu-open'); if (menuOpener) { menuOpener.setAttribute('aria-expanded', 'false'); menuOpener.focus(); } };
-  document.querySelectorAll('.menu-btn').forEach((b) => b.addEventListener('click', () => { menuOpener = b; body.classList.add('menu-open'); b.setAttribute('aria-expanded', 'true'); menu.querySelector('a').focus(); }));
-  menu.querySelector('.menu-close').addEventListener('click', closeMenu);
-  menu.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => body.classList.remove('menu-open')));
+  document.querySelectorAll<HTMLElement>('.menu-btn').forEach((b) => b.addEventListener('click', () => { menuOpener = b; body.classList.add('menu-open'); b.setAttribute('aria-expanded', 'true'); menu.querySelector<HTMLElement>('a')!.focus(); }));
+  menu.querySelector<HTMLElement>('.menu-close')!.addEventListener('click', closeMenu);
+  menu.querySelectorAll<HTMLElement>('a').forEach((a) => a.addEventListener('click', () => body.classList.remove('menu-open')));
   menu.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
 
   /* ---------- cursor + botão magnético ---------- */
   const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-  const cursor = document.querySelector('.cursor');
-  const magnet = document.querySelector('.magnet');
+  const cursor = document.querySelector<HTMLElement>('.cursor')!;
+  const magnet = document.querySelector<HTMLElement>('.magnet')!;
   if (fine && !reduce) {
     let cx = 0, cy = 0, tx = 0, ty = 0, craf = 0;
     const loop = () => {
@@ -203,14 +203,13 @@ import { projects } from '../data/projects';
       magnet.style.transform = d < 220 ? 'translate(' + dx * 0.3 + 'px,' + dy * 0.3 + 'px)' : '';
     }, { passive: true });
     document.addEventListener('mouseleave', () => cursor.classList.remove('on'));
-    document.querySelectorAll('a, button, .card').forEach((el) => {
+    document.querySelectorAll<HTMLElement>('a, button, .card').forEach((el) => {
       el.addEventListener('mouseenter', () => cursor.classList.add('big'));
       el.addEventListener('mouseleave', () => cursor.classList.remove('big'));
     });
   }
 
   /* ---------- motor de scroll ---------- */
-  const $ = (id) => document.getElementById(id);
   const hero = $('topo'), sobre = $('sobre'), exp = $('experiencia'), proj = $('projetos'), contato = $('contato');
   const track = $('track');
   let wide = window.innerWidth > 900;
@@ -279,25 +278,25 @@ import { projects } from '../data/projects';
 
   /* ---------- abertura blueprint ---------- */
   const intro = (function(){
-    const boot = document.querySelector('.boot');
-    const svg = boot.querySelector('.boot-svg'), log = boot.querySelector('.boot-log'), count = boot.querySelector('.boot-count');
-    const skip = boot.querySelector('.boot-skip');
+    const boot = document.querySelector<HTMLElement>('.boot')!;
+    const svg = boot.querySelector<HTMLElement>('.boot-svg')!, log = boot.querySelector<HTMLElement>('.boot-log')!, count = boot.querySelector<HTMLElement>('.boot-count')!;
+    const skip = boot.querySelector<HTMLElement>('.boot-skip')!;
     const NS = 'http://www.w3.org/2000/svg';
     const parts = [
       ['.top .logo', 'logo'], ['.top .links', 'nav'], ['.top .bp-toggle', 'button'], ['.top .menu-btn', 'button'],
       ['.hero .tag', 'p.tag'], ['.hero h1 .l1', 'h1'], ['.hero h1 .l2', 'h1'], ['.hero .lead', 'p.lead'],
       ['.hero-ctas .btn-primary', 'a.btn'], ['.hero-ctas .btn-ghost', 'a.btn']
     ];
-    const steps = [[0, 'inicializando grid'], [22, 'desenhando wireframe'], [52, 'aplicando tipografia'], [78, 'carregando movimento'], [100, 'render()']].map(([v, m]) => [v, T(m)]);
-    let raf = 0, timers = [], running = false;
-    const el = (tag, attrs) => { const n = document.createElementNS(NS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); return n; };
+    const steps = ([[0, 'inicializando grid'], [22, 'desenhando wireframe'], [52, 'aplicando tipografia'], [78, 'carregando movimento'], [100, 'render()']] as [number, string][]).map(([v, m]): [number, string] => [v, T(m)]);
+    let raf = 0, timers: number[] = [], running = false;
+    const el = (tag: string, attrs: Record<string, string | number>) => { const n = document.createElementNS(NS, tag) as SVGElement; for (const k in attrs) n.setAttribute(k, String(attrs[k])); return n; };
     const build = () => {
       svg.innerHTML = '';
       const W = innerWidth, H = innerHeight;
       svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
       let i = 0;
       parts.forEach(([sel, name]) => {
-        const node = document.querySelector(sel); if (!node) return;
+        const node = document.querySelector<HTMLElement>(sel)!; if (!node) return;
         const r = node.getBoundingClientRect(); if (r.width < 2 || r.bottom < 0 || r.top > H) return;
         const d = (0.12 + i * 0.11) + 's';
         if (name === 'h1') {
@@ -305,7 +304,7 @@ import { projects } from '../data/projects';
           const v = el('line', { x1: r.left, x2: r.left, y1: 0, y2: H, class: 'g' }); v.style.setProperty('--d', d); svg.appendChild(v);
         }
         const rect = el('rect', { x: r.left, y: r.top, width: r.width, height: r.height, rx: name === 'a.btn' || name === 'button' ? r.height / 2 : 2, class: 'w' });
-        rect.style.setProperty('--len', Math.ceil(2 * (r.width + r.height)));
+        rect.style.setProperty('--len', String(Math.ceil(2 * (r.width + r.height))));
         rect.style.setProperty('--d', d);
         svg.appendChild(rect);
         const right = r.left + 150 > W;
@@ -323,7 +322,7 @@ import { projects } from '../data/projects';
       timers.push(setTimeout(() => { root.classList.remove('intro'); boot.classList.remove('out', 'render'); }, 900));
       document.removeEventListener('keydown', onKey);
     };
-    const onKey = (e) => { if (e.key === 'Escape') finish(); };
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') finish(); };
     const run = () => {
       if (running) return; running = true;
       window.scrollTo(0, 0);
@@ -332,11 +331,11 @@ import { projects } from '../data/projects';
       build();
       document.addEventListener('keydown', onKey);
       const t0 = performance.now(), DUR = 1900;
-      const loop = (now) => {
+      const loop = (now: number) => {
         const p = Math.min(1, (now - t0) / DUR);
         const e = 1 - Math.pow(1 - p, 2.2);
         const n = Math.round(e * 100);
-        count.firstChild.nodeValue = n;
+        count.firstChild!.nodeValue = String(n);
         let msg = steps[0][1]; steps.forEach(([v, m]) => { if (n >= v) msg = m; });
         log.innerHTML = '&gt; ' + msg + (n >= 100 ? ' <b>✓</b>' : '<b>_</b>');
         if (p < 1) raf = requestAnimationFrame(loop);
@@ -380,14 +379,14 @@ import { projects } from '../data/projects';
 
   /* ---------- túnel 3D ---------- */
   (function(){
-    const sec = $('projetos'), track = $('track'), pin = sec.querySelector('.proj-pin');
-    const cards = [...track.querySelectorAll('.card')];
+    const sec = $('projetos'), track = $('track'), pin = sec.querySelector<HTMLElement>('.proj-pin')!;
+    const cards = [...track.querySelectorAll<HTMLElement>('.card')];
     const N = cards.length, D = 1400, Z0 = 900;
-    const slots = cards.map((c) => { const s = document.createElement('div'); s.className = 'slot'; c.parentNode.insertBefore(s, c); s.appendChild(c); return s; });
+    const slots = cards.map((c) => { const s = document.createElement('div'); s.className = 'slot'; c.parentNode!.insertBefore(s, c); s.appendChild(c); return s; });
     const bg = document.createElement('canvas'); bg.className = 'tun-bg'; bg.setAttribute('aria-hidden', 'true'); pin.insertBefore(bg, pin.firstChild);
-    const ctx = bg.getContext('2d');
+    const ctx = bg.getContext('2d')!;
     const counter = document.createElement('div'); counter.className = 'tun-count'; counter.setAttribute('aria-hidden', 'true'); pin.appendChild(counter);
-    let vw = 0, vh = 0, F = 800, READ = 200, mobile = false, dpr = 1, lay = [], raf = 0, cloneSlots = null;
+    let vw = 0, vh = 0, F = 800, READ = 200, mobile = false, dpr = 1, lay: { x: number; y: number; z: number; ry: number }[] = [], raf = 0, cloneSlots: HTMLElement[] | null = null;
     const ZEND = Z0 + (N - 1) * D + 2200, PR = 0.74;
     const endEl = document.createElement('div'); endEl.className = 'tun-end';
     endEl.innerHTML = '<p>// fim do túnel</p><h3>Tem mais do outro lado.</h3><a class="btn btn-primary" href="#pessoais">ver projetos pessoais ↓</a>';
@@ -407,17 +406,17 @@ import { projects } from '../data/projects';
         };
       });
     };
-    const ease = (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-    const hexToRgb = (h) => { const m = h.replace('#', ''); const v = parseInt(m.length === 3 ? m.split('').map((c) => c + c).join('') : m, 16); return [(v >> 16) & 255, (v >> 8) & 255, v & 255]; };
-    const head = sec.querySelector('.proj-head');
+    const ease = (t: number) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    const hexToRgb = (h: string) => { const m = h.replace('#', ''); const v = parseInt(m.length === 3 ? m.split('').map((c) => c + c).join('') : m, 16); return [(v >> 16) & 255, (v >> 8) & 255, v & 255]; };
+    const head = sec.querySelector<HTMLElement>('.proj-head')!;
     let passFade = 1;
-    const drawTunnel = (cam) => {
+    const drawTunnel = (cam: number) => {
       const W = vw, H = vh, cx = W / 2, cy = H * (mobile ? 0.58 : 0.6);
       const k = READ / F;
       const TW = W * 1.15 * k, TH = H * 1.05 * k;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, W, H);
-      const proj = (x, y, z) => { const s = F / Math.max(1, z); return [cx + x * s, cy + y * s, s]; };
+      const proj = (x: number, y: number, z: number) => { const s = F / Math.max(1, z); return [cx + x * s, cy + y * s, s]; };
       const near = 60, far = 9000;
       const dEnd = ZEND - cam;
       const lineEnd = Math.max(near + 1, Math.min(far, dEnd));
@@ -503,10 +502,10 @@ import { projects } from '../data/projects';
       counter.style.opacity = (1 - show).toFixed(3);
       drawTunnel(camZ);
       const cx = vw / 2, cy = vh * (mobile ? 0.58 : 0.6);
-      if (!cloneSlots) { const c = document.querySelectorAll('.xray .slot'); if (c.length) cloneSlots = [...c]; }
+      if (!cloneSlots) { const c = document.querySelectorAll<HTMLElement>('.xray .slot'); if (c.length) cloneSlots = [...c]; }
       slots.forEach((s, k) => {
         const q = lay[k], depth = q.z - camZ;
-        let t, op;
+        let t: string, op: number;
         if (depth < 60) { op = 0; t = 'translate(-9999px,0)'; }
         else {
           const sc = F / depth;
@@ -529,7 +528,7 @@ import { projects } from '../data/projects';
 
   /* ---------- palavras-chave ---------- */
   (function(){
-    const typed = $('kwType').querySelector('.typed');
+    const typed = $('kwType').querySelector<HTMLElement>('.typed')!;
     const list = ['performático.', 'acessível.', 'cheio de movimento.', 'detalhista.'].map(T);
     if (reduce) { typed.textContent = list[0]; return; }
     let wi = 0, ci = 0, del = false, running = false, timer = 0;
@@ -547,10 +546,10 @@ import { projects } from '../data/projects';
 
   /* ---------- contato: copiar email + relógio ---------- */
   (function(){
-    const btn = $('copyMail'), hint = $('copyHint'), label = btn.querySelector('span');
+    const btn = $('copyMail'), hint = $('copyHint'), label = btn.querySelector<HTMLElement>('span')!;
     const EM = 'ricardo.baldrez@gmail.com';
     let t = 0;
-    const done = (ok) => {
+    const done = (ok: boolean) => {
       btn.classList.toggle('copied', ok);
       label.textContent = T(ok ? 'copiado ✓' : 'copiar');
       hint.textContent = T(ok ? 'email copiado, é só colar' : 'não deu pra copiar: selecione o email acima');
@@ -573,9 +572,9 @@ import { projects } from '../data/projects';
   /* ---------- menu ativo + dock que some ao rolar (mobile) ---------- */
   (function(){
     const ids = ['sobre', 'experiencia', 'projetos', 'pessoais', 'contato'];
-    const links = [...document.querySelectorAll('.links a, .menu a')];
+    const links = [...document.querySelectorAll<HTMLElement>('.links a, .menu a')];
     let current = '';
-    const setCur = (id) => {
+    const setCur = (id: string) => {
       if (id === current) return; current = id;
       links.forEach((a) => { if (a.getAttribute('href') === '#' + id) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); });
     };
@@ -584,8 +583,8 @@ import { projects } from '../data/projects';
       raf = 0;
       const mid = innerHeight * 0.45;
       let id = '';
-      ids.forEach((k) => { const el = document.getElementById(k); if (el && el.getBoundingClientRect().top < mid) id = k; });
-      const pal = document.getElementById('palavras');
+      ids.forEach((k) => { const el = $(k); if (el && el.getBoundingClientRect().top < mid) id = k; });
+      const pal = $('palavras');
       if (id === 'pessoais' && pal && pal.getBoundingClientRect().top < mid) id = '';
       setCur(id);
       const y = scrollY;
@@ -602,12 +601,12 @@ import { projects } from '../data/projects';
 
   /* ---------- raio-x ---------- */
   const xray = (function(){
-    const layer = document.querySelector('.xray'), lens = document.querySelector('.lens'), label = lens.querySelector('span');
+    const layer = document.querySelector<HTMLElement>('.xray')!, lens = document.querySelector<HTMLElement>('.lens')!, label = lens.querySelector<HTMLElement>('span')!;
     let cloned = false;
     const ensureClone = () => {
       if (cloned) return; cloned = true;
-      const clone = document.querySelector('main').cloneNode(true);
-      clone.querySelectorAll('[id]').forEach((el) => el.removeAttribute('id'));
+      const clone = document.querySelector<HTMLElement>('main')!.cloneNode(true) as HTMLElement;
+      clone.querySelectorAll<HTMLElement>('[id]').forEach((el) => el.removeAttribute('id'));
       clone.setAttribute('inert', '');
       layer.appendChild(clone);
     };
@@ -628,7 +627,7 @@ import { projects } from '../data/projects';
     const kick = () => { if (!raf) raf = requestAnimationFrame(draw); };
     const on = () => { ensureClone(); target = R(); layer.classList.add('show'); lens.classList.add('show'); body.classList.add('xray-hold'); kick(); };
     const off = () => { if (pinned) return; target = 0; body.classList.remove('xray-hold'); kick(); };
-    const blocked = (t) => t.closest('a, button, input, .term, .menu, .pill, .top, label, .dock');
+    const blocked = (t: EventTarget | null) => (t as Element).closest('a, button, input, .term, .menu, .pill, .top, label, .dock');
     window.addEventListener('scroll', () => { if (target) kick(); }, { passive: true });
     if (!touchUI) {
       document.addEventListener('mousedown', (e) => {
@@ -664,37 +663,38 @@ import { projects } from '../data/projects';
 
   /* ---------- transições entre seções (teste) ---------- */
   const transitions = (function(){
-    const btns = [...document.querySelectorAll('.tr-pick [data-tr]')];
-    const toast = document.querySelector('.tr-toast');
-    const names = { 1: 'fio de luz', 2: 'números gigantes', 3: 'código (arquivo sendo aberto)', 4: 'onda no grid' };
+    const btns = [...document.querySelectorAll<HTMLElement>('.tr-pick [data-tr]')];
+    const toast = document.querySelector<HTMLElement>('.tr-toast')!;
+    const names: Record<number, string> = { 1: 'fio de luz', 2: 'números gigantes', 3: 'código (arquivo sendo aberto)', 4: 'onda no grid' };
     let mode = 3, toastT = 0;
     const accent = () => getComputedStyle(root).getPropertyValue('--mag').trim() || '#FF2E88';
-    const docTop = (el) => el.getBoundingClientRect().top + window.scrollY;
+    const docTop = (el: Element) => el.getBoundingClientRect().top + window.scrollY;
 
     /* 1 · fio de luz */
-    const svg = document.querySelector('.thread'), NS = 'http://www.w3.org/2000/svg';
-    let segs = [], built = false;
+    const svg = document.querySelector<SVGSVGElement>('.thread')!, NS = 'http://www.w3.org/2000/svg';
+    type Seg = { glow: SVGPathElement; line: SVGPathElement; head: SVGCircleElement; halo: SVGCircleElement; len: number; samples: [number, number][]; y0: number; y1: number };
+    let segs: Seg[] = [], built = false;
     const buildThread = () => {
       svg.innerHTML = '';
       const docH = document.documentElement.scrollHeight, W = document.documentElement.clientWidth;
-      svg.setAttribute('width', W); svg.setAttribute('height', docH); svg.style.height = docH + 'px';
+      svg.setAttribute('width', String(W)); svg.setAttribute('height', String(docH)); svg.style.height = docH + 'px';
       svg.setAttribute('viewBox', '0 0 ' + W + ' ' + docH);
       const defs = document.createElementNS(NS, 'defs');
       defs.innerHTML = '<linearGradient id="thr" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="' + docH + '"><stop offset="0" stop-color="#FF2E88"/><stop offset=".45" stop-color="#22D3EE"/><stop offset="1" stop-color="#B6F43C"/></linearGradient><filter id="thrGlow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6"/></filter>';
       svg.appendChild(defs);
-      const wrap = document.querySelector('#sobre .wrap').getBoundingClientRect();
+      const wrap = document.querySelector<HTMLElement>('#sobre .wrap')!.getBoundingClientRect();
       const L = Math.max(10, wrap.left - (W < 600 ? 12 : 22)), R = Math.min(W - 14, wrap.right + (W < 600 ? 0 : 10));
-      const y = (sel, k) => { const el = document.querySelector(sel); const r = el.getBoundingClientRect(); return r.top + window.scrollY + r.height * (k || 0); };
-      const mid = (a, b) => (a + b) / 2;
+      const y = (sel: string, k?: number) => { const el = document.querySelector<HTMLElement>(sel)!; const r = el.getBoundingClientRect(); return r.top + window.scrollY + r.height * (k || 0); };
+      const mid = (a: number, b: number) => (a + b) / 2;
       const heroEnd = y('#topo', 1), sobreTop = y('#sobre .eyebrow'), sobreEnd = y('#sobre', 1), expTop = y('#experiencia .eyebrow'), expEnd = y('#experiencia', 1);
       const kwTop = y('#palavras .kw-type'), kwEnd = y('#palavras', 1), contTop = y('#contato .eyebrow');
-      const mg = document.querySelector('#copyMail').getBoundingClientRect();
+      const mg = document.querySelector<HTMLElement>('#copyMail')!.getBoundingClientRect();
       const magX = mg.left + mg.width / 2, magY = mg.top + window.scrollY + mg.height / 2;
-      const ctas = document.querySelector('.hero-ctas').getBoundingClientRect();
-      const start = [L, ctas.bottom + window.scrollY + 40];
-      const A = [start, [R, mid(heroEnd, sobreTop) + 20], [L, sobreTop - 12], [L, sobreEnd - 160], [R, mid(sobreEnd, expTop)], [L, expTop - 12], [L, expEnd]];
-      const B = [[L, kwTop - 60], [L, kwEnd - 60], [R, mid(kwEnd, contTop)], [L, contTop - 12], [L, magY - 40], [magX - mg.width / 2 - 6, magY]];
-      const toD = (pts) => {
+      const ctas = document.querySelector<HTMLElement>('.hero-ctas')!.getBoundingClientRect();
+      const start: [number, number] = [L, ctas.bottom + window.scrollY + 40];
+      const A: [number, number][] = [start, [R, mid(heroEnd, sobreTop) + 20], [L, sobreTop - 12], [L, sobreEnd - 160], [R, mid(sobreEnd, expTop)], [L, expTop - 12], [L, expEnd]];
+      const B: [number, number][] = [[L, kwTop - 60], [L, kwEnd - 60], [R, mid(kwEnd, contTop)], [L, contTop - 12], [L, magY - 40], [magX - mg.width / 2 - 6, magY]];
+      const toD = (pts: [number, number][]) => {
         let d = 'M' + pts[0][0] + ' ' + pts[0][1];
         for (let i = 1; i < pts.length; i++) {
           const [x0, y0] = pts[i - 1], [x1, y1] = pts[i], my = (y0 + y1) / 2;
@@ -714,8 +714,8 @@ import { projects } from '../data/projects';
         const halo = document.createElementNS(NS, 'circle'); halo.setAttribute('r', '16'); halo.setAttribute('fill', 'url(#thr)'); halo.setAttribute('opacity', '.55'); halo.setAttribute('filter', 'url(#thrGlow)');
         g.append(base, glow, line, halo, head); svg.appendChild(g);
         const len = line.getTotalLength();
-        const samples = []; for (let i = 0; i <= 200; i++) { const pt = line.getPointAtLength(len * i / 200); samples.push([pt.y, len * i / 200]); }
-        [glow, line].forEach((pth) => { pth.style.strokeDasharray = len; pth.style.strokeDashoffset = len; });
+        const samples: [number, number][] = []; for (let i = 0; i <= 200; i++) { const pt = line.getPointAtLength(len * i / 200); samples.push([pt.y, len * i / 200]); }
+        [glow, line].forEach((pth) => { pth.style.strokeDasharray = String(len); pth.style.strokeDashoffset = String(len); });
         return { glow, line, head, halo, len, samples, y0: pts[0][1], y1: pts[pts.length - 1][1] };
       });
       built = true; drawThread();
@@ -728,32 +728,32 @@ import { projects } from '../data/projects';
         if (target >= sg.y1) L = sg.len;
         else if (target > sg.y0) { for (const [yy, ll] of sg.samples) { if (yy <= target) L = Math.max(L, ll); } }
         const off = sg.len - L;
-        sg.line.style.strokeDashoffset = off; sg.glow.style.strokeDashoffset = off;
+        sg.line.style.strokeDashoffset = String(off); sg.glow.style.strokeDashoffset = String(off);
         const vis = L > 1 && L < sg.len - 1;
         const pt = sg.line.getPointAtLength(L);
-        [sg.head, sg.halo].forEach((c) => { c.setAttribute('cx', pt.x); c.setAttribute('cy', pt.y); c.style.opacity = vis ? '' : '0'; });
+        [sg.head, sg.halo].forEach((c) => { c.setAttribute('cx', String(pt.x)); c.setAttribute('cy', String(pt.y)); c.style.opacity = vis ? '' : '0'; });
       });
     };
 
     /* 2 · números gigantes */
-    const nums = [...document.querySelectorAll('[data-n]')];
+    const nums = [...document.querySelectorAll<HTMLElement>('[data-n]')];
     const drawNums = () => {
       if (mode !== 2) return;
       const vh = innerHeight;
       nums.forEach((n, i) => {
-        const r = n.parentElement.getBoundingClientRect();
+        const r = n.parentElement!.getBoundingClientRect();
         const off = ((r.top + (n.style.bottom ? r.height : 0)) - vh / 2) * -0.28;
         n.style.transform = 'translate3d(0,' + off.toFixed(1) + 'px,0)';
       });
     };
 
     /* 3 · arquivo sendo aberto */
-    const files = [...document.querySelectorAll('.fileline')];
-    const runFile = (fl) => {
+    const files = [...document.querySelectorAll<HTMLElement>('.fileline')];
+    const runFile = (fl: HTMLElement) => {
       if (fl.dataset.done) return; fl.dataset.done = '1';
-      const sec = fl.closest('section');
-      const rev = sec.querySelector('[data-reveal]');
-      const cmd = fl.dataset.file;
+      const sec = fl.closest('section')!;
+      const rev = sec.querySelector<HTMLElement>('[data-reveal]')!;
+      const cmd = fl.dataset.file || '';
       if (reduce) { fl.innerHTML = '<span class="cmd">$</span> ' + cmd + '<span class="ok">✓</span>'; if (rev) rev.classList.add('opened'); return; }
       let i = 0;
       const typeIt = () => {
@@ -770,32 +770,32 @@ import { projects } from '../data/projects';
       typeIt();
       setTimeout(() => { if (rev) rev.classList.add('opened'); }, 120);
     };
-    const secOf = (f) => f.closest('section');
-    const fio = new IntersectionObserver((en) => { en.forEach((e) => { if (e.isIntersecting && mode === 3) { const f = e.target.querySelector('.fileline'); if (f) runFile(f); } }); }, { rootMargin: '0px 0px -15% 0px' });
+    const secOf = (f: HTMLElement) => f.closest('section')!;
+    const fio = new IntersectionObserver((en) => { en.forEach((e) => { if (e.isIntersecting && mode === 3) { const f = e.target.querySelector<HTMLElement>('.fileline')!; if (f) runFile(f); } }); }, { rootMargin: '0px 0px -15% 0px' });
     files.forEach((f) => fio.observe(secOf(f)));
     const resetFiles = () => {
       files.forEach((f) => { delete f.dataset.done; f.innerHTML = ''; });
-      document.querySelectorAll('[data-reveal]').forEach((r) => r.classList.remove('opened'));
+      document.querySelectorAll<HTMLElement>('[data-reveal]').forEach((r) => r.classList.remove('opened'));
       files.forEach((f) => { const sc = secOf(f); fio.unobserve(sc); fio.observe(sc); });
     };
 
     /* 4 · onda no grid */
-    const cv = document.querySelector('.wave'), ctx = cv.getContext('2d');
-    const secs = ['topo', 'sobre', 'experiencia', 'projetos', 'palavras', 'contato'].map((id) => document.getElementById(id));
+    const cv = document.querySelector<HTMLCanvasElement>('.wave')!, ctx = cv.getContext('2d')!;
+    const secs = ['topo', 'sobre', 'experiencia', 'projetos', 'palavras', 'contato'].map((id) => $(id));
     let curSec = -1, waveRaf = 0;
-    const wave = (down, sec) => {
+    const wave = (down: boolean, sec: HTMLElement | undefined) => {
       if (reduce || mode !== 4) return;
       const dpr = Math.min(devicePixelRatio || 1, 2), W = innerWidth, H = innerHeight;
       cv.width = W * dpr; cv.height = H * dpr;
       const cell = W < 600 ? 32 : 44, col = accent();
       /* origem: o título da seção que está entrando */
       let ox = W * 0.25, oy = down ? H * 0.6 : H * 0.4;
-      const tt = sec && sec.querySelector('.h2, .eyebrow, h1, .big, .kw-type');
+      const tt = sec && sec.querySelector<HTMLElement>('.h2, .eyebrow, h1, .big, .kw-type')!;
       if (tt) { const r = tt.getBoundingClientRect(); ox = Math.min(W, Math.max(0, r.left + Math.min(r.width, 280) / 2)); oy = Math.min(H, Math.max(0, r.top + r.height / 2)); }
       const maxR = Math.hypot(Math.max(ox, W - ox), Math.max(oy, H - oy));
       const rings = [0, 140, 280], DUR = 1100, BAND = 70, t0 = performance.now();
       cancelAnimationFrame(waveRaf);
-      const fr = (now) => {
+      const fr = (now: number) => {
         const el = now - t0;
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
         if (el > DUR + rings[rings.length - 1]) return;
@@ -838,19 +838,19 @@ import { projects } from '../data/projects';
     let rT = 0;
     const rebuild = () => { clearTimeout(rT); rT = setTimeout(() => { buildThread(); drawNums(); }, 250); };
     window.addEventListener('resize', rebuild, { passive: true });
-    if (window.ResizeObserver) new ResizeObserver(rebuild).observe(document.querySelector('main'));
-    const set = (m, silent) => {
+    if (window.ResizeObserver) new ResizeObserver(rebuild).observe(document.querySelector<HTMLElement>('main')!);
+    const set = (m: number, silent?: boolean) => {
       mode = m;
       body.classList.remove('tr1', 'tr2', 'tr3', 'tr4'); body.classList.add('tr' + m);
-      btns.forEach((b) => b.setAttribute('aria-pressed', String(+b.dataset.tr === m)));
+      btns.forEach((b) => b.setAttribute('aria-pressed', String(Number(b.dataset.tr) === m)));
       if (m === 1) buildThread();
       if (m === 2) drawNums();
       if (m === 3) resetFiles();
       if (!silent) { try { localStorage.setItem('rb-transicao', String(m)); } catch (e) {} }
       if (!silent) { toast.textContent = m + ' · ' + T(names[m]); toast.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => toast.classList.remove('show'), 1600); }
     };
-    btns.forEach((b) => b.addEventListener('click', (e) => { e.stopPropagation(); set(+b.dataset.tr); }));
-    let saved = 3; try { const v = parseInt(localStorage.getItem('rb-transicao'), 10); if (v >= 1 && v <= 4) saved = v; } catch (e) {}
+    btns.forEach((b) => b.addEventListener('click', (e) => { e.stopPropagation(); set(Number(b.dataset.tr)); }));
+    let saved = 3; try { const v = parseInt(localStorage.getItem('rb-transicao') || '', 10); if (v >= 1 && v <= 4) saved = v; } catch (e) {}
     body.classList.remove('tr1', 'tr2', 'tr4'); body.classList.add('tr' + saved); mode = saved;
     const boot = () => { set(saved, true); checkSec(); };
     if (document.fonts) document.fonts.ready.then(() => setTimeout(boot, 300)); else setTimeout(boot, 300);
@@ -859,14 +859,17 @@ import { projects } from '../data/projects';
 
   /* ---------- terminal secreto ---------- */
   (function(){
-    const term = document.querySelector('.term'), veil = document.querySelector('.term-veil');
-    const out = term.querySelector('.term-out'), form = term.querySelector('form'), input = term.querySelector('.term-in');
-    const openBtn = document.querySelector('.term-btn');
-    let opener = null, booted = false, busy = false, queue = Promise.resolve(), hist = [], hi = 0, pending = null;
-    const esc = (t) => t.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    const term = document.querySelector<HTMLElement>('.term')!, veil = document.querySelector<HTMLElement>('.term-veil')!;
+    const out = term.querySelector<HTMLElement>('.term-out')!, form = term.querySelector<HTMLElement>('form')!, input = term.querySelector<HTMLInputElement>('.term-in')!;
+    const openBtn = document.querySelector<HTMLElement>('.term-btn')!;
+    type Line = [string, string, boolean?];
+    type Cmd = (a: string[]) => Promise<unknown>;
+    let opener: Element | null = null, booted = false, busy = false, queue: Promise<unknown> = Promise.resolve(), hist: string[] = [], hi = 0, pending = null;
+    const ESC: Record<string, string> = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' };
+    const esc = (t: string) => t.replace(/[&<>"]/g, (c) => ESC[c]);
     const scrollOut = () => { out.scrollTop = out.scrollHeight; };
-    const wait = (ms) => new Promise((r) => setTimeout(r, reduce ? 0 : ms));
-    const type = async (html, cls, isHtml) => {
+    const wait = (ms: number) => new Promise((r) => setTimeout(r, reduce ? 0 : ms));
+    const type = async (html: string, cls?: string, isHtml?: boolean) => {
       if (!isHtml) html = T(html);
       const p = document.createElement('p'); if (cls) p.className = cls; out.appendChild(p);
       if (isHtml) { p.innerHTML = html; scrollOut(); await wait(30); return; }
@@ -874,12 +877,12 @@ import { projects } from '../data/projects';
       for (let i = 0; i <= html.length; i += 3) { p.textContent = html.slice(0, i); scrollOut(); await wait(8); }
       p.textContent = html; scrollOut();
     };
-    const say = async (lines) => { for (const l of lines) await type(l[0], l[1], l[2]); };
-    const go = (id) => { close(); setTimeout(() => { const el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' }); }, 250); };
-    const themes = { magenta: '#FF2E88', cyan: '#22D3EE', lime: '#B6F43C', violet: '#A78BFA' };
-    const cmds = {
+    const say = async (lines: Line[]) => { for (const l of lines) await type(l[0], l[1], l[2]); };
+    const go = (id: string) => { close(); setTimeout(() => { const el = $(id); if (el) el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' }); }, 250); };
+    const themes: Record<string, string> = { magenta: '#FF2E88', cyan: '#22D3EE', lime: '#B6F43C', violet: '#A78BFA' };
+    const cmds: Record<string, Cmd> = {
       help: async () => {
-        const groups = [
+        const groups: [string, [string, string][]][] = [
           ['navegar', [['about', 'vai até o Sobre'], ['experience', 'vai até a Experiência'], ['projects', 'vai até os Projetos'], ['contact', 'vai até o Contato']]],
           ['sobre mim', [['whoami', 'quem é o dev'], ['stack', 'tecnologias'], ['github · linkedin', 'abre os links'], ['ls · cat <arquivo>', 'explora os arquivos']]],
           ['visual', [['theme <cor>', 'cor de destaque: magenta · cyan · lime · violet'], ['theme minimal [cor]', 'versão mais seca, com uma cor só de destaque'], ['theme default', 'volta pro colorido'], ['theme light · dark', 'tema claro ou escuro'], ['blueprint', 'liga/desliga o modo blueprint'], ['xray', 'deixa a lente de raio-x sempre ligada'], ['transition <1-4>', 'troca a transição entre seções'], ['intro', 'replay da abertura']]],
@@ -893,7 +896,7 @@ import { projects } from '../data/projects';
       },
       whoami: async () => say([['Ricardo Barbosa Baldrez', 'ok'], ['desenvolvedor front-end e mobile · React, React Native e TypeScript.', ''], ['hoje: app da Crefisa pela GFT Technologies · São Paulo, SP', 'muted'], ['estudando: pós em Engenharia de IA Aplicada (UNIPDS) · LLMs, RAG, MCP e agentes de IA', 'muted']]),
       ls: async () => say([['about.txt  experience.log  projects/  contact.md  secret.txt', 'acc']]),
-      cat: async (a) => {
+      cat: async (a: string[]) => {
         const f = (a[0] || '').toLowerCase();
         if (f === 'about.txt') return go('sobre');
         if (f === 'experience.log') return go('experiencia');
@@ -909,9 +912,9 @@ import { projects } from '../data/projects';
       contact: async () => go('contato'),
       github: async () => say([['<a href="https://github.com/RicardoBaldrez">github.com/RicardoBaldrez</a>', '', true]]),
       linkedin: async () => say([['<a href="https://www.linkedin.com/in/ricardo-barbosa-baldrez-38b760145">linkedin.com/in/ricardo-barbosa-baldrez</a>', '', true]]),
-      theme: async (a) => {
+      theme: async (a: string[]) => {
         const t = (a[0] || '').toLowerCase();
-        const accent = (n) => { root.setAttribute('data-accent', n); try { localStorage.setItem('rb-accent', n); } catch (e) {} };
+        const accent = (n: string) => { root.setAttribute('data-accent', n); try { localStorage.setItem('rb-accent', n); } catch (e) {} };
         if (t === 'light' || t === 'dark') { setMode(t); return say([[t === 'light' ? 'tema claro aplicado.' : 'tema escuro aplicado.', 'ok']]); }
         if (t === 'minimal') {
           if (root.classList.contains('light')) return say([['o minimal só existe no tema escuro. digite theme dark antes.', 'err']]);
@@ -926,8 +929,8 @@ import { projects } from '../data/projects';
         accent(t);
         return say([['cor de destaque: ' + t, 'ok']]);
       },
-      blueprint: async () => { document.querySelector('.bp-toggle').click(); return say([[body.classList.contains('bp') ? 'blueprint ligado. feche o terminal pra ver.' : 'blueprint desligado.', 'ok']]); },
-      sudo: async (a) => {
+      blueprint: async () => { document.querySelector<HTMLElement>('.bp-toggle')!.click(); return say([[body.classList.contains('bp') ? 'blueprint ligado. feche o terminal pra ver.' : 'blueprint desligado.', 'ok']]); },
+      sudo: async (a: string[]) => {
         if ((a[0] || '') !== 'hire') return say([['sudo: só aceito um comando: sudo hire', 'err']]);
         await say([['[sudo] senha para recrutador: ********', 'muted']]);
         await wait(400);
@@ -938,10 +941,10 @@ import { projects } from '../data/projects';
       clear: async () => { out.innerHTML = ''; },
       exit: async () => close(),
       date: async () => say([[new Date().toLocaleString(LANG === 'en' ? 'en-US' : 'pt-BR'), '']]),
-      echo: async (a) => say([[a.join(' '), '']]),
-      history: async () => say(hist.length ? hist.map((h, i) => [String(i + 1).padStart(3) + '  ' + h, 'muted']) : [['(vazio)', 'muted']]),
+      echo: async (a: string[]) => say([[a.join(' '), '']]),
+      history: async () => say(hist.length ? hist.map((h, i): Line => [String(i + 1).padStart(3) + '  ' + h, 'muted']) : [['(vazio)', 'muted']]),
       xray: async () => { const on = xray.toggle(); return say([[on ? 'raio-x fixo ligado. feche o terminal e mova o mouse. digite xray de novo pra desligar.' : 'raio-x fixo desligado.', 'ok']]); },
-      transition: async (a) => {
+      transition: async (a: string[]) => {
         const n = parseInt(a[0], 10);
         if (!(n >= 1 && n <= 4)) return say([['uso: transition 1 | 2 | 3 | 4', 'err']]);
         transitions.set(n);
@@ -953,7 +956,7 @@ import { projects } from '../data/projects';
     };
     cmds.cls = cmds.clear;
     const names = Object.keys(cmds);
-    const run = async (raw) => {
+    const run = async (raw: string) => {
       const line = raw.trim();
       const pEl = document.createElement('p'); pEl.className = 'cmd';
       pEl.innerHTML = '<span style="color:var(--lime)">$</span> ' + esc(line); out.appendChild(pEl); scrollOut();
@@ -977,7 +980,7 @@ import { projects } from '../data/projects';
     const close = () => {
       if (!body.classList.contains('term-open')) return;
       body.classList.remove('term-open');
-      if (opener && opener.focus) opener.focus();
+      if (opener instanceof HTMLElement) opener.focus();
     };
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -999,12 +1002,12 @@ import { projects } from '../data/projects';
       if (e.key === 'Escape') { e.preventDefault(); close(); }
       if (e.key === 'Tab' && e.target !== input) { e.preventDefault(); input.focus(); }
     });
-    term.addEventListener('click', (e) => { if (e.target.tagName !== 'A' && !e.target.closest('.term-x') && !window.getSelection().toString()) input.focus(); });
-    term.querySelector('.term-x').addEventListener('click', close);
+    term.addEventListener('click', (e) => { const el = e.target as Element; if (el.tagName !== 'A' && !el.closest('.term-x') && !window.getSelection()?.toString()) input.focus(); });
+    term.querySelector<HTMLElement>('.term-x')!.addEventListener('click', close);
     veil.addEventListener('click', close);
     openBtn.addEventListener('click', open);
     document.addEventListener('keydown', (e) => {
-      const t = e.target;
+      const t = e.target as HTMLElement | null;
       if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
       const isTilde = e.key === '~' || e.key === '`' || (e.key === 'Dead' && (e.code === 'Quote' || e.code === 'Backquote' || e.code === 'IntlBackslash'));
       if (isTilde) { e.preventDefault(); body.classList.contains('term-open') ? close() : open(); }
@@ -1014,10 +1017,11 @@ import { projects } from '../data/projects';
   /* ---------- letras com física ---------- */
   (function(){
     const arena = $('arena');
-    const title = arena.querySelector('h2');
-    const resetBtn = document.querySelector('.arena-reset');
-    const els = [...arena.querySelectorAll('.ch:not(.sp)')];
-    let bodies = [], W = 0, H = 0, raf = 0, last = 0, dropped = false, active = false;
+    const title = arena.querySelector<HTMLElement>('h2')!;
+    const resetBtn = document.querySelector<HTMLElement>('.arena-reset')!;
+    const els = [...arena.querySelectorAll<HTMLElement>('.ch:not(.sp)')];
+    type Body = { el: HTMLElement; w: number; h: number; hx: number; hy: number; x: number; y: number; rad: number; mode: string; vx: number; vy: number; a: number; va: number; i: number; delay: number };
+    let bodies: Body[] = [], W = 0, H = 0, raf = 0, last = 0, dropped = false, active = false;
     const G = 2600, REST = 0.42;
     const layout = () => {
       arena.classList.remove('phys');
@@ -1025,9 +1029,9 @@ import { projects } from '../data/projects';
       els.forEach((el) => { el.style.transform = ''; });
       const ar = arena.getBoundingClientRect();
       W = ar.width; H = ar.height;
-      bodies = els.map((el, i) => {
+      bodies = els.map((el, i): Body => {
         const r = el.getBoundingClientRect();
-        const b = { el, w: r.width, h: r.height, hx: r.left - ar.left, hy: r.top - ar.top, mode: 'home', vx: 0, vy: 0, a: 0, va: 0, i };
+        const b: Body = { el, w: r.width, h: r.height, hx: r.left - ar.left, hy: r.top - ar.top, x: 0, y: 0, rad: 0, mode: 'home', vx: 0, vy: 0, a: 0, va: 0, i, delay: 0 };
         b.x = b.hx; b.y = b.hy; b.rad = Math.min(b.w, b.h) * 0.46;
         return b;
       });
@@ -1035,9 +1039,9 @@ import { projects } from '../data/projects';
       arena.classList.add('phys');
       bodies.forEach(paint);
     };
-    const paint = (b) => { b.el.style.transform = 'translate(' + b.x.toFixed(1) + 'px,' + b.y.toFixed(1) + 'px) rotate(' + b.a.toFixed(3) + 'rad)'; };
+    const paint = (b: Body) => { b.el.style.transform = 'translate(' + b.x.toFixed(1) + 'px,' + b.y.toFixed(1) + 'px) rotate(' + b.a.toFixed(3) + 'rad)'; };
     const kick = () => { if (!raf) { last = performance.now(); raf = requestAnimationFrame(tick); } };
-    const tick = (now) => {
+    const tick = (now: number) => {
       raf = 0;
       let dt = Math.min(0.033, (now - last) / 1000); last = now;
       let moving = false;
@@ -1102,9 +1106,9 @@ import { projects } from '../data/projects';
       kick();
     };
     // arrastar e arremessar
-    let drag = null;
+    let drag: { b: Body; ox: number; oy: number; hist: { x: number; y: number; t: number }[] } | null = null;
     arena.addEventListener('pointerdown', (e) => {
-      const el = e.target.closest('.ch:not(.sp)');
+      const el = (e.target as Element).closest<HTMLElement>('.ch:not(.sp)');
       if (!el || reduce) return;
       const b = bodies.find((q) => q.el === el); if (!b) return;
       e.preventDefault();
