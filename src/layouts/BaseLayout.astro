@@ -1,0 +1,35 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Ricardo Baldrez · Front-end & Mobile Developer',
+  description = 'Interfaces web e mobile rápidas, acessíveis e cheias de movimento. Do pixel ao deploy.',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+    <!-- antes da página aparecer: tema (claro/escuro), cor de destaque, idioma e abertura -->
+    <script is:inline>(function(){var m=null;try{m=localStorage.getItem('rb-mode')}catch(e){}if(!m)m=window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';if(m==='light')document.documentElement.classList.add('light');var a='cyan';try{a=localStorage.getItem('rb-accent')||'cyan'}catch(e){}document.documentElement.setAttribute('data-accent',a)})();</script>
+    <script is:inline>window.RB_LANG=(function(){try{return localStorage.getItem('rb-lang')==='en'?'en':'pt'}catch(e){return 'pt'}})();if(window.RB_LANG==='en')document.documentElement.lang='en';</script>
+    <script is:inline>(function(){var r=false;try{r=window.matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}if(!r)document.documentElement.classList.add('intro')})();</script>
+  </head>
+  <body class="tr3">
+    <a class="skip" href="#sobre">Pular para o conteúdo</a>
+    <slot />
+  </body>
+</html>
