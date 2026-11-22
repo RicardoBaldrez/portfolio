@@ -13,6 +13,11 @@ import Projects from '../components/sections/Projects.astro';
 import SideProjects from '../components/sections/SideProjects.astro';
 import Keywords from '../components/sections/Keywords.astro';
 import Contact from '../components/sections/Contact.astro';
+import TransitionLayer from '../components/TransitionLayer.astro';
+import Dock from '../components/Dock.astro';
+import XRay from '../components/XRay.astro';
+import Terminal from '../components/Terminal.astro';
+import SvgFilters from '../components/SvgFilters.astro';
 ---
 
 <BaseLayout>
@@ -21,6 +26,7 @@ import Contact from '../components/sections/Contact.astro';
   <Header />
   <PillNav />
   <MobileMenu />
+  <TransitionLayer />
   <main>
     <Hero />
     <About />
@@ -31,4 +37,8 @@ import Contact from '../components/sections/Contact.astro';
     <Contact />
   </main>
   <BackToTop />
+  <Dock />
+  <XRay />
+  <Terminal />
+  <SvgFilters />
 </BaseLayout>
