@@ -1,15 +1,18 @@
 # Ricardo Baldrez · Portfólio
 
-Portfólio pessoal de **Ricardo Baldrez**, desenvolvedor front-end e mobile. Feito com [Astro](https://astro.build) e TypeScript, sem bibliotecas de animação: todo o movimento é CSS e JavaScript.
+Portfólio pessoal de **Ricardo Baldrez**, desenvolvedor front-end e mobile. Feito com [Astro](https://astro.build) e TypeScript, sem bibliotecas de animação: todo o movimento é escrito à mão.
+
+**Site no ar:** [ricardobaldrez.vercel.app](https://ricardobaldrez.vercel.app), com deploy automático na Vercel a cada push no `main`.
 
 ## Destaques
 
 - **Abertura em "blueprint"**: o wireframe da página se desenha antes do conteúdo aparecer.
-- **Túnel de projetos** com perspectiva calculada em JavaScript e canvas, e cards que viram para mostrar o estudo de caso.
+- **Túnel de projetos** com perspectiva calculada em TypeScript e canvas, e cards que viram para mostrar o estudo de caso.
 - **Timeline de experiência** que se desenha com o scroll.
 - **Terminal** com comandos (`help`, `whoami`, `theme`, `translate`, `sudo hire`…).
 - **Temas**: escuro "neon", claro "grafite", cor de destaque configurável e tema minimal.
 - **Português e inglês**, pelo botão PT | EN ou pelo comando `translate`.
+- **SEO e prévia de link**: link canônico, tags Open Graph com imagem de prévia, dados estruturados e `robots.txt`.
 - **Acessibilidade**: respeita a preferência de reduzir movimento, tem link para pular para o conteúdo e navegação por teclado.
 
 ## Rodando localmente
@@ -42,11 +45,10 @@ src/
 ├── pages/               # index.astro
 ├── scripts/             # interações em TypeScript (scroll, túnel, terminal, temas, idioma)
 └── styles/              # CSS global
-public/                  # imagens e favicon
+public/                  # imagens, favicon, imagem de prévia e robots.txt
 ```
 
 ## Próximos passos
 
 - Renderizar a timeline e os projetos no servidor (HTML pronto para SEO).
 - Versão em inglês com endereço próprio (`/en`).
-- Imagem de prévia para compartilhamento e deploy na Vercel.
