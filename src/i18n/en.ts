@@ -104,7 +104,7 @@ export const EN: Record<string, string> = {
   'não deu pra copiar: selecione o email acima': "couldn't copy: select the email above",
   'Trajetória completa, recomendações e o melhor jeito de falar de oportunidades.': 'Full career history, recommendations and the best way to talk about opportunities.',
   'Código dos projetos pessoais.': 'Code for my side projects.', 'Pra propostas, projetos ou só pra trocar uma ideia.': 'For proposals, projects or just a chat.',
-  'HTML, CSS e JS · atualizado em nov 2026': 'HTML, CSS and JS · updated nov 2026',
+  'Astro, HTML, CSS e JS · atualizado em nov 2026': 'Astro, HTML, CSS & JS · updated Nov 2026',
   // dock e segredos
   'Segredos do site': 'Site secrets', 'SEGREDOS DO SITE': 'SITE SECRETS', 'Raio-X': 'X-ray',
   'Segure o clique (ou o dedo) em qualquer lugar.': 'Press and hold anywhere (mouse or finger).',
