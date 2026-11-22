@@ -10,6 +10,18 @@ const {
   title = 'Ricardo Baldrez · Front-end & Mobile Developer',
   description = 'Interfaces web e mobile rápidas, acessíveis e cheias de movimento. Do pixel ao deploy.',
 } = Astro.props;
+
+const site = Astro.site ?? new URL('https://ricardobaldrez.vercel.app');
+const canonical = new URL(Astro.url.pathname, site).href;
+const image = new URL('/og-image.png', site).href;
+const person = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Ricardo Barbosa Baldrez',
+  jobTitle: 'Front-end & Mobile Developer',
+  url: site.href,
+  sameAs: ['https://www.linkedin.com/in/ricardo-barbosa-baldrez-38b760145', 'https://github.com/RicardoBaldrez'],
+};
 ---
 
 <!doctype html>
@@ -19,6 +31,27 @@ const {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta name="author" content="Ricardo Baldrez" />
+    <meta name="theme-color" content="#0A0B14" />
+    <link rel="canonical" href={canonical} />
+
+    <!-- prévia ao compartilhar o link (LinkedIn, WhatsApp, Slack, X) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:locale:alternate" content="en_US" />
+    <meta property="og:site_name" content="Ricardo Baldrez" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={image} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={title} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
+    <script type="application/ld+json" set:html={JSON.stringify(person)} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
