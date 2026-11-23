@@ -1,3 +1,12 @@
 ---
+import { projects } from '../data/projects';
+
+/* um filtro de distorção por card do túnel (a escala é animada no hover) */
 ---
-<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs id="filters"></defs></svg>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs id="filters">
+    {projects.map((_, i) => (
+      <filter id={`warp${i}`} x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.012 0.02" numOctaves="2" seed={String(i + 3)} result="n" /><feDisplacementMap in="SourceGraphic" in2="n" scale="0" xChannelSelector="R" yChannelSelector="G" /></filter>
+    ))}
+  </defs>
+</svg>

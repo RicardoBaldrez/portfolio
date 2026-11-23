@@ -1,4 +1,8 @@
 ---
+import { projects } from '../../data/projects';
+import { COVERS } from '../../data/covers';
+
+/* os cards do túnel são gerados no build: o conteúdo já vem no HTML */
 ---
 <section class="proj tunnel" id="projetos">
   <div class="proj-pin">
@@ -11,6 +15,38 @@
       </div>
       <div class="proj-meter"><span aria-hidden="true"><i></i></span><a href="https://github.com/RicardoBaldrez">ver tudo no GitHub →</a></div>
     </div>
-    <div class="track" id="track"></div>
+    <div class="track" id="track">
+      {projects.map((p, i) => (
+        <article class="card" data-i={i} style={`--c:${p.color}`}>
+          <div class="card-in">
+            <div class="face front">
+              <div class="media">
+                <div class="img" style={`background-color:${p.color};filter:url(#warp${i})`} set:html={COVERS[p.cover]} />
+                <span class="n">{'0' + (i + 1)}</span>
+                {p.badge && <span class="badge"><i aria-hidden="true"></i>{p.badge}</span>}
+              </div>
+              <div class="body">
+                <h3>{p.title}</h3>
+                <p class="meta">{p.meta}</p>
+                <p>{p.summary}</p>
+                <div class="chips">{p.tags.map((t) => <span>{t}</span>)}</div>
+                <button class="flip case-btn" type="button" aria-label={`Ver estudo de caso: ${p.title}`}>ver estudo de caso →</button>
+              </div>
+            </div>
+            <div class="face back" inert>
+              <div class="back-bar">
+                <i style="background:#FF2E88"></i><i style="background:#B6F43C"></i><i style="background:#22D3EE"></i><span>{p.file}</span>
+                <button class="flip" type="button" aria-label={`Voltar para a frente: ${p.title}`}>↺</button>
+              </div>
+              <div class="case" tabindex="0" aria-label={`Estudo de caso: ${p.title}`}>
+                <section><h4>// DESAFIO</h4><p>{p.challenge}</p></section>
+                <section><h4>// O QUE EU FIZ</h4><ul>{p.did.map((d) => <li>{d}</li>)}</ul></section>
+                <section><h4>// RESULTADO</h4><p>{p.result}</p></section>
+              </div>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
   </div>
 </section>

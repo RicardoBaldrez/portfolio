@@ -1,7 +1,4 @@
 import { EN, EN_RULES } from '../i18n/en';
-import { LOGOS } from '../data/logos';
-import { jobs } from '../data/jobs';
-import { projects, type Project } from '../data/projects';
 
 /* Interações do portfólio: scroll, túnel, terminal, temas, idioma etc. */
 (function(){
@@ -50,22 +47,6 @@ import { projects, type Project } from '../data/projects';
     '<span style="color:' + c + ';opacity:clamp(.12, calc(var(--s) * ' + K + ' - ' + i + '), 1);transform:translateY(calc(clamp(0, ' + (i + 1) + ' - var(--s) * ' + K + ', 1) * 32px))">' + w + '</span>'
   ).join(' ');
 
-  const nWork = jobs.filter((j) => !j.edu).length;
-  $('jobs').innerHTML = '<span class="tl-fill" aria-hidden="true"></span><span class="tl-head" aria-hidden="true"></span>' + jobs.map((j, i) =>
-    '<li class="tl-item" style="--c:' + j.c + '">' +
-      '<span class="tl-dot" aria-hidden="true"></span>' +
-      '<div class="tl-date"><span>' + j.when + '</span>' + (j.now || j.badge ? '<span class="tl-now"><i aria-hidden="true"></i>' + (j.badge || 'atual') + '</span>' : '') + '</div>' +
-      '<div class="tl-card"><span class="num" aria-hidden="true">' + (j.edu ? '' : '0' + (nWork - i)) + '</span>' +
-      (j.logos ? '<div class="tl-logos" aria-hidden="true">' + j.logos.map((k) => '<span class="lg lg-' + k + '">' + LOGOS[k] + '</span>').join('<i class="lg-x">×</i>') + '</div>' : '') +
-        '<h3' + (j.logos ? ' class="sr-only"' : '') + '>' + j.co + '</h3><p class="role">' + j.role + '</p><p class="desc">' + j.desc + '</p>' +
-        '<div class="chips">' + j.tags.map((t) => '<span>' + t + '</span>').join('') + '</div>' +
-        (j.did ? '<details class="tl-mods tl-did"><summary>ver o que eu entreguei</summary><ol>' + j.did.map((m) => '<li>' + m + '</li>').join('') + '</ol></details>' : '') +
-      '</div></li>'
-  ).join('');
-  (function(){
-    const firstEdu = document.querySelectorAll<HTMLElement>('#jobs .tl-item')[jobs.findIndex((j) => j.edu)];
-    if (firstEdu) firstEdu.insertAdjacentHTML('beforebegin', '<li class="tl-sep"><span class="tl-sep-mark" aria-hidden="true"></span><p class="tl-sep-k">// formação</p><h3 class="tl-sep-t">Formação acadêmica</h3></li>');
-  })();
   (function(){
     const list = $('jobs'), items = [...list.querySelectorAll<HTMLElement>('.tl-item')];
     let raf = 0;
@@ -83,39 +64,7 @@ import { projects, type Project } from '../data/projects';
     upd();
   })();
 
-  const D = '#0A0B14';
-  const covers: Record<Project['cover'], string> = {
-    phone: '<svg class="cover" viewBox="0 0 400 260" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g fill="none" stroke="' + D + '" stroke-width="3" stroke-linecap="round"><rect x="150" y="26" width="100" height="208" rx="18" fill="rgba(10,11,20,.12)"/><path d="M185 38h30"/><rect x="164" y="56" width="72" height="34" rx="8" fill="rgba(10,11,20,.2)"/><path d="M164 106h56M164 120h40"/><rect x="164" y="136" width="32" height="32" rx="8"/><rect x="204" y="136" width="32" height="32" rx="8"/><rect x="164" y="176" width="32" height="32" rx="8"/><rect x="204" y="176" width="32" height="32" rx="8" fill="rgba(10,11,20,.2)"/></g><g fill="none" stroke="' + D + '" stroke-width="2" opacity=".45"><rect x="62" y="70" width="58" height="22" rx="11"/><rect x="62" y="104" width="58" height="22" rx="4"/><circle cx="91" cy="160" r="16"/><rect x="282" y="74" width="54" height="54" rx="10"/><path d="M282 146h54M282 160h36"/></g></svg>',
-    chart: '<svg class="cover" viewBox="0 0 400 260" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g fill="none" stroke="' + D + '" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="56" y="34" width="288" height="192" rx="12" fill="rgba(10,11,20,.12)"/><path d="M56 60h288"/><circle cx="74" cy="47" r="3"/><circle cx="86" cy="47" r="3"/><circle cx="98" cy="47" r="3"/><path d="M76 84h70M76 98h44"/><path d="M80 196 L130 168 L170 178 L214 132 L254 146 L320 96" stroke-width="4"/><path d="M80 196 L130 168 L170 178 L214 132 L254 146 L320 96 L320 206 L80 206Z" fill="rgba(10,11,20,.14)" stroke="none"/><path d="M76 206h248" opacity=".5"/><circle cx="320" cy="96" r="6" fill="' + D + '"/></g></svg>',
-    flow: '<svg class="cover" viewBox="0 0 400 260" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g fill="none" stroke="' + D + '" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="70" cy="130" r="24" fill="rgba(10,11,20,.2)"/><circle cx="160" cy="80" r="20"/><circle cx="160" cy="180" r="20"/><circle cx="250" cy="130" r="22" fill="rgba(10,11,20,.12)"/><circle cx="336" cy="130" r="24" fill="rgba(10,11,20,.2)"/><path d="M92 120 L140 88M92 140 L140 172M180 86 L230 120M180 174 L230 140M272 130 H310"/><path d="M302 122 L312 130 L302 138"/><path d="M60 130h20M70 120v20" stroke-width="3.5"/><path d="M326 130 l7 7 l13 -14" stroke-width="3.5"/></g></svg>',
-    mail: '<svg class="cover" viewBox="0 0 400 260" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g fill="none" stroke="' + D + '" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="108" y="56" width="184" height="124" rx="10" fill="rgba(10,11,20,.14)"/><path d="M108 66 L200 132 L292 66"/><g opacity=".5"><rect x="70" y="96" width="120" height="80" rx="8" transform="rotate(-10 130 136)"/><rect x="214" y="104" width="120" height="80" rx="8" transform="rotate(9 274 144)"/></g><path d="M140 206h120M160 222h80" opacity=".6"/></g></svg>'
-  };
-  const projColors = projects.map((p) => p.color);
   const defs = $('filters');
-  defs.innerHTML = projColors.map((_, i) =>
-    '<filter id="warp' + i + '" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.012 0.02" numOctaves="2" seed="' + (i + 3) + '" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="0" xChannelSelector="R" yChannelSelector="G"/></filter>'
-  ).join('');
-  $('track').innerHTML = projects.map((p, i) => {
-    const n = '0' + (i + 1);
-    return '<article class="card" data-i="' + i + '" style="--c:' + p.color + '"><div class="card-in">' +
-      '<div class="face front">' +
-        '<div class="media"><div class="img" style="background-color:' + p.color + ';filter:url(#warp' + i + ')">' + covers[p.cover] + '</div>' +
-        '<span class="n">' + n + '</span>' + (p.badge ? '<span class="badge"><i aria-hidden="true"></i>' + p.badge + '</span>' : '') + '</div>' +
-        '<div class="body"><h3>' + p.title + '</h3><p class="meta">' + p.meta + '</p><p>' + p.summary + '</p>' +
-        '<div class="chips">' + p.tags.map((t) => '<span>' + t + '</span>').join('') + '</div>' +
-        '<button class="flip case-btn" type="button" aria-label="Ver estudo de caso: ' + p.title + '">ver estudo de caso →</button></div>' +
-      '</div>' +
-      '<div class="face back" inert>' +
-        '<div class="back-bar"><i style="background:#FF2E88"></i><i style="background:#B6F43C"></i><i style="background:#22D3EE"></i><span>' + p.file + '</span>' +
-        '<button class="flip" type="button" aria-label="Voltar para a frente: ' + p.title + '">↺</button></div>' +
-        '<div class="case" tabindex="0" aria-label="Estudo de caso: ' + p.title + '">' +
-          '<section><h4>// DESAFIO</h4><p>' + p.challenge + '</p></section>' +
-          '<section><h4>// O QUE EU FIZ</h4><ul>' + p.did.map((d) => '<li>' + d + '</li>').join('') + '</ul></section>' +
-          '<section><h4>// RESULTADO</h4><p>' + p.result + '</p></section>' +
-        '</div>' +
-      '</div>' +
-    '</div></article>';
-  }).join('');
   document.querySelectorAll<HTMLElement>('.card').forEach((card) => {
     const front = card.querySelector<HTMLElement>('.front')!, back = card.querySelector<HTMLElement>('.back')!;
     card.querySelectorAll<HTMLElement>('.flip').forEach((btn) => btn.addEventListener('click', () => {

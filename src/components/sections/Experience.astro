@@ -1,4 +1,10 @@
 ---
+import { jobs } from '../../data/jobs';
+import { LOGOS } from '../../data/logos';
+
+/* a timeline é gerada no build: o HTML já chega pronto para o navegador e para o Google */
+const nWork = jobs.filter((j) => !j.edu).length;
+const firstEdu = jobs.findIndex((j) => j.edu);
 ---
 <section class="exp" id="experiencia">
   <span class="bignum l" data-n aria-hidden="true" style="top:-10vw">02</span>
@@ -11,6 +17,42 @@
       <h2 class="h2">Onde eu<br>já <span style="color:var(--lime)">deixei</span><br>código.</h2>
       <div class="exp-bar" aria-hidden="true"><i></i></div>
     </div>
-    <ol class="jobs" id="jobs"></ol>
+    <ol class="jobs" id="jobs">
+      <span class="tl-fill" aria-hidden="true"></span><span class="tl-head" aria-hidden="true"></span>
+      {jobs.map((j, i) => (
+        <>
+          {i === firstEdu && (
+            <li class="tl-sep"><span class="tl-sep-mark" aria-hidden="true"></span><p class="tl-sep-k">// formação</p><h3 class="tl-sep-t">Formação acadêmica</h3></li>
+          )}
+          <li class="tl-item" style={`--c:${j.c}`}>
+            <span class="tl-dot" aria-hidden="true"></span>
+            <div class="tl-date">
+              <span>{j.when}</span>
+              {(j.now || j.badge) && <span class="tl-now"><i aria-hidden="true"></i>{j.badge || 'atual'}</span>}
+            </div>
+            <div class="tl-card">
+              <span class="num" aria-hidden="true">{j.edu ? '' : '0' + (nWork - i)}</span>
+              {j.logos && (
+                <div class="tl-logos" aria-hidden="true">
+                  {j.logos.map((k, n) => (
+                    <>
+                      {n > 0 && <i class="lg-x">×</i>}
+                      <span class={`lg lg-${k}`} set:html={LOGOS[k]} />
+                    </>
+                  ))}
+                </div>
+              )}
+              <h3 class={j.logos ? 'sr-only' : undefined}>{j.co}</h3>
+              <p class="role">{j.role}</p>
+              <p class="desc">{j.desc}</p>
+              <div class="chips">{j.tags.map((t) => <span>{t}</span>)}</div>
+              {j.did && (
+                <details class="tl-mods tl-did"><summary>ver o que eu entreguei</summary><ol>{j.did.map((m) => <li>{m}</li>)}</ol></details>
+              )}
+            </div>
+          </li>
+        </>
+      ))}
+    </ol>
   </div>
 </section>
