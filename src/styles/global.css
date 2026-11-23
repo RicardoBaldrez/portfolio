@@ -639,7 +639,3 @@ main{position:relative;z-index:1}
 .menu-open .menu-btn .mi i:nth-child(2),.menu-open .menu-close .mi i:nth-child(2){transform:rotate(-45deg)}
 .menu-btn:hover .mi i:nth-child(2){left:0;width:18px}
 @media (prefers-reduced-motion:reduce){.mi i{transition:none!important}}
-
-/* pílula fixa cabendo em celulares estreitos */
-@media (max-width:600px){.pill{gap:10px;padding:5px 5px 5px 14px}.pill .links{gap:12px}.pill .btn{padding:0 12px}.pill .mode-btn,.pill .lang-btn{width:36px;height:36px;min-width:36px;padding:0}}
-@media (max-width:430px){.pill .lang-btn{display:none}}
