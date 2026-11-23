@@ -569,7 +569,7 @@ import { projects, type Project } from '../data/projects';
   })();
 
 
-  /* ---------- menu ativo + dock que some ao rolar (mobile) ---------- */
+  /* ---------- menu ativo conforme a seção na tela ---------- */
   (function(){
     const ids = ['sobre', 'experiencia', 'projetos', 'pessoais', 'contato'];
     const links = [...document.querySelectorAll<HTMLElement>('.links a, .menu a')];
@@ -578,7 +578,7 @@ import { projects, type Project } from '../data/projects';
       if (id === current) return; current = id;
       links.forEach((a) => { if (a.getAttribute('href') === '#' + id) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); });
     };
-    let last = scrollY, raf = 0;
+    let raf = 0;
     const upd = () => {
       raf = 0;
       const mid = innerHeight * 0.45;
@@ -587,13 +587,6 @@ import { projects, type Project } from '../data/projects';
       const pal = $('palavras');
       if (id === 'pessoais' && pal && pal.getBoundingClientRect().top < mid) id = '';
       setCur(id);
-      const y = scrollY;
-      if (innerWidth <= 900) {
-        if (y > last + 6 && y > 200) body.classList.add('dock-hide');
-        else if (y < last - 6) body.classList.remove('dock-hide');
-        if (y + innerHeight >= document.documentElement.scrollHeight - 40) body.classList.remove('dock-hide');
-      } else body.classList.remove('dock-hide');
-      last = y;
     };
     window.addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(upd); }, { passive: true });
     upd();

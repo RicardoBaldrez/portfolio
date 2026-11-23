@@ -37,7 +37,6 @@ a{color:var(--cyan)}a:hover{color:var(--lime)}
 .links a[aria-current="true"]::after{transform:scaleX(1)}
 .menu a[aria-current="true"]{color:var(--lime)}
 .dock{transition:transform .4s cubic-bezier(.2,.8,.2,1),opacity .3s}
-@media (max-width:900px){.dock-hide .dock{transform:translateY(140%);opacity:0;pointer-events:none}.dock-hide .tr-toast{opacity:0}}
 @media (max-width:600px){.pill .links .opt{display:none}}
 .links a{color:var(--muted);text-decoration:none;position:relative}
 .links a::after{content:"";position:absolute;left:0;bottom:-6px;width:100%;height:2px;background:var(--lime);transform:scaleX(0);transform-origin:right;transition:transform .35s cubic-bezier(.2,.8,.2,1)}
@@ -68,7 +67,7 @@ a{color:var(--cyan)}a:hover{color:var(--lime)}
 .end-on .to-top{transform:none;opacity:1;visibility:visible}
 
 /* hero */
-.hero{position:relative;min-height:100vh;min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding:120px 0 140px}
+.hero{position:relative;overflow-x:clip;min-height:100vh;min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding:120px 0 140px}
 .dots{position:absolute;inset:-80px 0;pointer-events:none}
 .dots .o{position:absolute;will-change:transform}
 .dots .d{display:block;border-radius:50%;animation:float 6s ease-in-out infinite}
@@ -640,3 +639,7 @@ main{position:relative;z-index:1}
 .menu-open .menu-btn .mi i:nth-child(2),.menu-open .menu-close .mi i:nth-child(2){transform:rotate(-45deg)}
 .menu-btn:hover .mi i:nth-child(2){left:0;width:18px}
 @media (prefers-reduced-motion:reduce){.mi i{transition:none!important}}
+
+/* pílula fixa cabendo em celulares estreitos */
+@media (max-width:600px){.pill{gap:10px;padding:5px 5px 5px 14px}.pill .links{gap:12px}.pill .btn{padding:0 12px}.pill .mode-btn,.pill .lang-btn{width:36px;height:36px;min-width:36px;padding:0}}
+@media (max-width:430px){.pill .lang-btn{display:none}}
