@@ -669,6 +669,7 @@ import { projects, type Project } from '../data/projects';
     let segs: Seg[] = [], built = false;
     const buildThread = () => {
       svg.innerHTML = '';
+      svg.setAttribute('height', '0'); svg.style.height = '0px';
       const docH = document.documentElement.scrollHeight, W = document.documentElement.clientWidth;
       svg.setAttribute('width', String(W)); svg.setAttribute('height', String(docH)); svg.style.height = docH + 'px';
       svg.setAttribute('viewBox', '0 0 ' + W + ' ' + docH);
@@ -934,24 +935,6 @@ import { projects, type Project } from '../data/projects';
       clear: async () => { out.innerHTML = ''; },
       exit: async () => close(),
       date: async () => say([[new Date().toLocaleString(LANG === 'en' ? 'en-US' : 'pt-BR'), '']]),
-      debug: async () => {
-        const de = document.documentElement, f = document.querySelector('footer')!;
-        const fb = Math.round(f.getBoundingClientRect().bottom + scrollY);
-        const isFixed = (el: Element | null) => { for (let p = el; p; p = p.parentElement) if (getComputedStyle(p).position === 'fixed') return true; return false; };
-        const below: string[] = [];
-        document.querySelectorAll('body *').forEach((el) => {
-          const r = el.getBoundingClientRect(); const b = Math.round(r.bottom + scrollY);
-          if (r.height && b > fb + 4 && !isFixed(el)) below.push((el.getAttribute('class') || el.tagName.toLowerCase()) + ' → ' + b);
-        });
-        const vv = window.visualViewport;
-        return say([
-          ['altura da página: ' + de.scrollHeight + ' · body: ' + document.body.scrollHeight, 'muted'],
-          ['fim do rodapé: ' + fb + ' · sobra: ' + (de.scrollHeight - fb), 'muted'],
-          ['tela: ' + innerWidth + '×' + innerHeight + (vv ? ' · visível: ' + Math.round(vv.width) + '×' + Math.round(vv.height) : ''), 'muted'],
-          [below.length ? 'passam do rodapé:' : 'nada passa do rodapé', 'ok'],
-          ...below.slice(0, 12).map((t): Line => ['  ' + t, '']),
-        ]);
-      },
       echo: async (a: string[]) => say([[a.join(' '), '']]),
       history: async () => say(hist.length ? hist.map((h, i): Line => [String(i + 1).padStart(3) + '  ' + h, 'muted']) : [['(vazio)', 'muted']]),
       xray: async () => { const on = xray.toggle(); return say([[on ? 'raio-x fixo ligado. feche o terminal e mova o mouse. digite xray de novo pra desligar.' : 'raio-x fixo desligado.', 'ok']]); },
