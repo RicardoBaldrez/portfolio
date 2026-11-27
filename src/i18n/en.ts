@@ -94,6 +94,25 @@ export const EN: Record<string, string> = {
   'Ajudei a construir a área praticamente do zero: detalhe do cartão, bloqueio temporário e definitivo com motivos de perda ou roubo, cartão virtual e troca de senha.': 'I helped build the area almost from scratch: card details, temporary and permanent blocking with loss or theft reasons, virtual card and PIN change.',
   'Atuei no time de Pix e entreguei o Pix Automático completo: aviso de autorizações pendentes, menu, lista de autorizações com abas e filtros, status e comprovante.': 'I worked on the Pix team and delivered the full Pix Automático: pending authorizations notice, menu, authorization list with tabs and filters, status and receipt.',
   '// fim do túnel': '// end of the tunnel', 'Tem mais do outro lado.': "There's more on the other side.", 'ver projetos pessoais ↓': 'see side projects ↓',
+  // reviews (feedbacks na timeline e comando feedback)
+  'ver os reviews': 'see the reviews', 'aprovou estas mudanças': 'approved these changes', 'recomendou no LinkedIn': 'recommended on LinkedIn',
+  'Especialista Mobile': 'Mobile Specialist', 'Gestão de Produto': 'Product Management', 'Dev Mobile': 'Mobile Developer',
+  'o que dizem do meu trabalho': 'what people say about my work',
+  'Ricardo entrou no projeto sem experiência com desenvolvimento mobile e aprendeu muito rapidamente a trabalhar com a tecnologia.':
+    'Ricardo joined the project with no mobile development experience and learned to work with the technology very quickly.',
+  'Sua habilidade de aprendizado rápido foi extremamente importante para começar a fazer entregas com qualidade e relevantes para o projeto.':
+    'His ability to learn fast was extremely important for him to start delivering high-quality work that mattered to the project.',
+  'Seu conhecimento técnico foi colocado em prática em diversos momentos, e sempre conseguiu se sair bem, agregando valor para as entregas do cliente.':
+    "His technical knowledge was put into practice many times, and he always did well, adding value to the client's deliveries.",
+  'Ricardo é sensacional como pessoa e como profissional, sabe estudar bem o projeto e enfrentar coisas novas com muita qualidade. Sempre preocupado em apoiar os outros.':
+    'Ricardo is amazing as a person and as a professional. He knows how to study the project well and take on new things with great quality. Always looking out for others.',
+  'A experiência de trabalho com Ricardo e sua equipe foi excelente. Conseguimos identificar boas oportunidades de melhoria e desenvolvemos processos de muita consistência para o gerenciamento da equipe e dos nossos projetos. Fiquei particularmente impressionado com sua habilidade para lidar com os clientes mais difíceis – sem esforço. Além de ser uma pessoa ótima e confiável, que honra seus compromissos. Por isso, foi um prazer conhecê-lo em minha vida profissional.':
+    'Working with Ricardo and his team was excellent. We identified good opportunities for improvement and built very consistent processes for managing the team and our projects. I was particularly impressed by his ability to handle the most difficult clients effortlessly. He is also a great, reliable person who keeps his commitments. It was a pleasure to meet him in my professional life.',
+  'Ricardo, além de extremamente habilidoso com desenvolvimento front-end (domina muito CSS), é um profissional competente, honesto, comprometido e possui muito espírito de equipe, além de ser muito inteligente sempre encontrando soluções em tempo recorde e claro, sempre de forma inovadora. Interessado e apaixonado pelo que faz, demonstra isso por estar sempre comentando sobre algo que está a estudar naquele momento.':
+    'Besides being extremely skilled at front-end development (he really knows CSS), Ricardo is a competent, honest and committed professional with a strong team spirit. He is also very smart, always finding solutions in record time and, of course, always in innovative ways. Curious and passionate about what he does, he shows it by always talking about whatever he is studying at the moment.',
+  'Tenho orgulho de ter integrado a mesma equipe e projetos que Ricardo.': "I'm proud to have been part of the same team and projects as Ricardo.",
+  'Ricardo é um excelente profissional, tive a oportunidade de trabalhar junto com ele em diversos projetos e posso atestar seu profissionalismo, espírito de líder e capacidade de resolução de problemas. Sem dúvida um ótimo profissional com o qual espero voltar a poder trabalhar novamente.':
+    'Ricardo is an excellent professional. I had the chance to work with him on several projects and can vouch for his professionalism, leadership spirit and problem-solving skills. Without a doubt a great professional I hope to work with again.',
   // pessoais
   'Projetos pessoais': 'Side projects', 'do outro lado — projetos pessoais': 'on the other side — side projects',
   'Também construo': 'I also build', 'por': 'on my', 'conta própria': 'own',

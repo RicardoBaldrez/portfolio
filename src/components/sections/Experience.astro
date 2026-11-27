@@ -49,6 +49,29 @@ const firstEdu = jobs.findIndex((j) => j.edu);
               {j.did && (
                 <details class="tl-mods tl-did"><summary>ver o que eu entreguei</summary><ol>{j.did.map((m) => <li>{m}</li>)}</ol></details>
               )}
+              {j.reviews && (
+                <details class="tl-mods tl-revs">
+                  <summary>
+                    <span class="rv-stack" aria-hidden="true">{j.reviews.map((r) => <span style={`background:${r.c}`}>{r.ini}</span>)}</span>
+                    <span>ver os reviews</span>
+                    <span class="rv-count">{j.reviews.length}</span>
+                  </summary>
+                  <div class="rv-list">
+                    {j.reviews.map((r) => (
+                      <article class="rv">
+                        <div class="rv-head">
+                          <span class="rv-av" style={`background:${r.c}`} aria-hidden="true">{r.ini}</span>
+                          <span class="rv-who">{r.role}</span>
+                          <span class="rv-act">{r.via === 'linkedin' ? 'recomendou no LinkedIn' : 'aprovou estas mudanças'}</span>
+                          <span class="rv-ok">✓ approved</span>
+                        </div>
+                        <blockquote class="rv-body">{r.text.map((t) => <p>{t}</p>)}</blockquote>
+                        <p class="rv-foot"><span>{r.co}</span><span>{r.year}</span></p>
+                      </article>
+                    ))}
+                  </div>
+                </details>
+              )}
             </div>
           </li>
         </>

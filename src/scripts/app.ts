@@ -1,4 +1,5 @@
 import { EN, EN_RULES } from '../i18n/en';
+import { jobs } from '../data/jobs';
 
 /* Interações do portfólio: scroll, túnel, terminal, temas, idioma etc. */
 (function(){
@@ -827,7 +828,7 @@ import { EN, EN_RULES } from '../i18n/en';
       help: async () => {
         const groups: [string, [string, string][]][] = [
           ['navegar', [['about', 'vai até o Sobre'], ['experience', 'vai até a Experiência'], ['projects', 'vai até os Projetos'], ['contact', 'vai até o Contato']]],
-          ['sobre mim', [['whoami', 'quem é o dev'], ['stack', 'tecnologias'], ['github · linkedin', 'abre os links'], ['ls · cat <arquivo>', 'explora os arquivos']]],
+          ['sobre mim', [['whoami', 'quem é o dev'], ['stack', 'tecnologias'], ['github · linkedin', 'abre os links'], ['ls · cat <arquivo>', 'explora os arquivos'], ['feedback', 'o que dizem do meu trabalho']]],
           ['visual', [['theme <cor>', 'cor de destaque: magenta · cyan · lime · violet'], ['theme minimal [cor]', 'versão mais seca, com uma cor só de destaque'], ['theme default', 'volta pro colorido'], ['theme light · dark', 'tema claro ou escuro'], ['blueprint', 'liga/desliga o modo blueprint'], ['xray', 'deixa a lente de raio-x sempre ligada'], ['transition <1-4>', 'troca a transição entre seções'], ['intro', 'replay da abertura']]],
           ['extras', [['translate', LANG === 'en' ? 'muda o site pra inglês' : 'muda o site pra inglês'], ['sudo hire', 'você sabe o que fazer'], ['clear · exit', 'limpa a tela · fecha o terminal']]]
         ];
@@ -894,10 +895,32 @@ import { EN, EN_RULES } from '../i18n/en';
         return say([['transição ' + n + ': ' + T(transitions.names[n]), 'ok']]);
       },
       intro: async () => { close(); setTimeout(() => intro.replay(), 300); },
+      feedback: async (a: string[]) => {
+        const en = LANG === 'en';
+        const all = jobs.flatMap((j) => j.reviews || []);
+        const head = (r: (typeof all)[number]) => '[' + r.ini + '] ' + T(r.role) + ' · ' + r.co + ' · ' + r.year;
+        const n = parseInt(a[0], 10);
+        if (a[0]) {
+          const r = all[n - 1];
+          if (!r) return say([[(en ? 'usage: feedback 1-' : 'uso: feedback 1-') + all.length, 'err']]);
+          await type(head(r), 'acc');
+          for (const t of r.text) await type('"' + T(t) + '"', '');
+          return type(r.via === 'linkedin' ? (en ? 'recommended on LinkedIn' : 'recomendado no LinkedIn') : (en ? 'internal feedback' : 'feedback interno'), 'muted');
+        }
+        const cos = new Set(all.map((r) => r.co)).size;
+        await type(all.length + ' reviews · ' + cos + (en ? ' companies' : ' empresas'), 'ok');
+        for (const [i, r] of all.entries()) {
+          const t = T(r.text[0]);
+          await type(String(i + 1).padStart(2) + '  ' + head(r), 'acc');
+          await type('    "' + (t.length > 90 ? t.slice(0, 88).trimEnd() + '…' : t) + '"', 'muted');
+        }
+        return type(en ? 'type feedback <number> to read a full review.' : 'digite feedback <número> pra ler um review inteiro.', 'muted');
+      },
       rm: async () => say([['permissão negada. bela tentativa.', 'err']]),
       translate: async () => { await say([[LANG === 'en' ? 'mudando pra português... reiniciando o RB-OS' : 'switching to English... rebooting RB-OS', 'ok']]); setTimeout(() => setLang(LANG === 'en' ? 'pt' : 'en'), reduce ? 0 : 700); }
     };
     cmds.cls = cmds.clear;
+    cmds.reviews = cmds.feedback;
     const names = Object.keys(cmds);
     const run = async (raw: string) => {
       const line = raw.trim();

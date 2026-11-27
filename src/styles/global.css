@@ -181,6 +181,26 @@ a{color:var(--cyan)}a:hover{color:var(--lime)}
 .tl-mods li::before{content:counter(md,decimal-leading-zero);flex:none;font-family:var(--mono);font-size:12px;line-height:1.7;color:var(--c)}
 @media (max-width:600px){.tl-mods ol{grid-template-columns:1fr}}
 .tl-did ol{grid-template-columns:1fr}
+/* reviews: feedbacks no formato de comentário de pull request */
+.tl-revs summary{gap:10px}
+.rv-stack{display:flex}
+.rv-stack span,.rv-av{display:grid;place-items:center;border-radius:50%;font-family:var(--mono);font-weight:500;color:#0A0B14}
+.rv-stack span{width:24px;height:24px;margin-left:-6px;font-size:9px;border:2px solid var(--surface)}
+.rv-stack span:first-child{margin-left:0}
+.rv-count{display:inline-grid;place-items:center;min-width:22px;height:22px;padding:0 6px;border-radius:999px;border:1px solid currentColor;font-size:11px}
+.rv-list{display:flex;flex-direction:column;gap:14px;margin-top:10px}
+.rv{border:1px solid var(--line2);border-radius:14px;overflow:hidden;background:var(--bg)}
+.rv-head{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;padding:10px 14px;border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--c) 6%,var(--surface));font-size:14px}
+.rv-av{flex:none;width:28px;height:28px;font-size:10px}
+.rv-who{font-weight:600;color:var(--text)}
+.rv-act{color:var(--muted)}
+.rv-ok{margin-left:auto;padding:3px 10px;border-radius:999px;background:color-mix(in srgb,var(--lime) 14%,transparent);color:var(--lime);font-family:var(--mono);font-size:11px;letter-spacing:.04em;white-space:nowrap}
+.rv-body{margin:0;padding:16px 18px 6px;display:flex;flex-direction:column;gap:10px}
+.rv-body p{margin:0;font-size:15px;line-height:1.65;color:var(--text)}
+.rv-body p:first-child::before{content:'“';color:var(--c);font-family:var(--display);font-weight:700}
+.rv-body p:last-child::after{content:'”';color:var(--c);font-family:var(--display);font-weight:700}
+.rv-foot{display:flex;flex-wrap:wrap;gap:6px 16px;margin:0;padding:6px 18px 14px;font-family:var(--mono);font-size:12px;color:var(--muted)}
+@media (max-width:600px){.rv-ok{margin-left:0}.rv-body{padding:14px 14px 4px}.rv-foot{padding:6px 14px 12px}}
 @media (prefers-reduced-motion:reduce){.tl-mods summary::before{transition:none}}
 
 /* projetos */
