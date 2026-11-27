@@ -639,3 +639,7 @@ main{position:relative;z-index:1}
 .menu-open .menu-btn .mi i:nth-child(2),.menu-open .menu-close .mi i:nth-child(2){transform:rotate(-45deg)}
 .menu-btn:hover .mi i:nth-child(2){left:0;width:18px}
 @media (prefers-reduced-motion:reduce){.mi i{transition:none!important}}
+
+/* destaques do estudo de caso */
+.case .hl{margin-top:10px}
+.case .hl b{display:block;color:var(--text);font-weight:600;margin-bottom:2px}

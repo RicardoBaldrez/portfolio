@@ -8,19 +8,34 @@ export interface Project {
   /** ilustração da capa do card */
   cover: 'phone' | 'chart' | 'flow' | 'mail';
   file: string;
-  challenge: string;
+  /** estudo de caso no formato antigo (desafio, o que eu fiz, resultado) */
+  challenge?: string;
   did: string[];
-  result: string;
+  result?: string;
+  /** formato detalhado: contexto, onde atuei e destaques */
+  context?: string;
+  highlights?: { title: string; text: string }[];
 }
 
 export const projects: Project[] = [
   { title: 'App Crefisa', meta: 'GFT · Crefisa · 2025 — atual', color: '#FF2E88', cover: 'phone', badge: 'em desenvolvimento',
-    summary: 'Novo app bancário da Crefisa, com Pix, transferências, cartões, limites e serviços como INSS na palma da mão.',
-    tags: ['Mobile', 'Fintech'],
+    summary: 'App bancário da Crefisa, em que atuei de ponta a ponta: transferências, Pix, cartões, conta e extrato, segurança e serviços como saque sem cartão e pagamento de boleto.',
+    tags: ['Mobile', 'Fintech', 'Design System'],
     file: 'case-crefisa.md',
-    challenge: 'Construir o app bancário mobile da Crefisa, com fluxos financeiros críticos, num projeto de escopo fechado e com qualidade desde o primeiro dia.',
-    did: ['Pix, TED e TEF: fluxos de transferência, incluindo atuação no time de Pix', 'Gestão de cartões e limites transacionais', 'Home do app, INSS e outros serviços bancários', 'Design System, integração com APIs e testes unitários e de integração'],
-    result: 'Fluxos financeiros críticos construídos sobre uma base de componentes padronizada, com mais estabilidade e menos falhas chegando à produção.' },
+    context: 'App bancário mobile construído do zero, em monorepo React Native, para um público com muitos aposentados e pensionistas. Por isso, cada fluxo financeiro precisa ser simples, seguro e acessível.',
+    did: [
+      'Transferências: jornada completa de TED e TEF, da escolha do banco ao comprovante, com agendamento',
+      'Pix: atuação no time de Pix e entrega do Pix Automático',
+      'Cartões: detalhe do cartão, bloqueios, cartão virtual e troca de senha',
+      'Conta e extrato: saldo, troca de conta e extrato com busca e filtros',
+      'Acesso e segurança: código por SMS, senha, biometria e prova de vida',
+      'Serviços: INSS, saque sem cartão, boleto, favorecidos, limites e encerramento de conta',
+    ],
+    highlights: [
+      { title: 'TED e TEF', text: 'Os dois tinham fluxos e telas duplicados. Criei uma base única, em que cada tipo é definido por configuração (textos, tarifa, agendamento e comprovante): menos código repetido e regras novas entrando sem duplicar telas.' },
+      { title: 'Cartões', text: 'Ajudei a construir a área praticamente do zero: detalhe do cartão, bloqueio temporário e definitivo com motivos de perda ou roubo, cartão virtual e troca de senha.' },
+      { title: 'Pix', text: 'Atuei no time de Pix e entreguei o Pix Automático completo: aviso de autorizações pendentes, menu, lista de autorizações com abas e filtros, status e comprovante.' },
+    ] },
   { title: 'Plataforma de Investimentos XP', meta: 'GFT · XP Inc. · 2024 — 2025', color: '#22D3EE', cover: 'chart',
     summary: 'Onde os clientes da XP acompanham a carteira, evoluem seus investimentos e falam com seus assessores.',
     tags: ['Web', 'Investimentos'],

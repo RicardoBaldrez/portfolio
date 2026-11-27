@@ -39,9 +39,21 @@ import { COVERS } from '../../data/covers';
                 <button class="flip" type="button" aria-label={`Voltar para a frente: ${p.title}`}>↺</button>
               </div>
               <div class="case" tabindex="0" aria-label={`Estudo de caso: ${p.title}`}>
-                <section><h4>// DESAFIO</h4><p>{p.challenge}</p></section>
-                <section><h4>// O QUE EU FIZ</h4><ul>{p.did.map((d) => <li>{d}</li>)}</ul></section>
-                <section><h4>// RESULTADO</h4><p>{p.result}</p></section>
+                {p.context ? (
+                  <>
+                    <section><h4>// CONTEXTO</h4><p>{p.context}</p></section>
+                    <section><h4>// ONDE ATUEI</h4><ul>{p.did.map((d) => <li>{d}</li>)}</ul></section>
+                    {p.highlights && (
+                      <section><h4>// DESTAQUES</h4>{p.highlights.map((h) => <p class="hl"><b>{h.title}</b> {h.text}</p>)}</section>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <section><h4>// DESAFIO</h4><p>{p.challenge}</p></section>
+                    <section><h4>// O QUE EU FIZ</h4><ul>{p.did.map((d) => <li>{d}</li>)}</ul></section>
+                    <section><h4>// RESULTADO</h4><p>{p.result}</p></section>
+                  </>
+                )}
               </div>
             </div>
           </div>
